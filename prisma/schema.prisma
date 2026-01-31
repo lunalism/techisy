@@ -1,0 +1,35 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Article {
+  id          String    @id @default(cuid())
+  title       String
+  url         String    @unique
+  source      String
+  sourceUrl   String?
+  publishedAt DateTime?
+  createdAt   DateTime  @default(now())
+  clusterId   String?
+
+  @@index([publishedAt])
+  @@index([source])
+  @@index([clusterId])
+}
+
+model Source {
+  id      String  @id @default(cuid())
+  name    String
+  rssUrl  String  @unique
+  country String  @default("US") // KR or US
+  active  Boolean @default(true)
+
+  @@index([country])
+  @@index([active])
+}
