@@ -34,10 +34,10 @@ const sources = [
     rssUrl: 'https://www.reuters.com/technology/rss',
     country: 'US',
   },
-  // KR - Korean Tech Media (verified working)
+  // KR - Korean Tech Media (verified working, tech-only feeds)
   {
     name: '전자신문',
-    rssUrl: 'https://rss.etnews.com/Section901.xml',
+    rssUrl: 'https://rss.etnews.com/Section902.xml', // IT/과학 섹션
     country: 'KR',
   },
   {
@@ -48,11 +48,6 @@ const sources = [
   {
     name: '플래텀',
     rssUrl: 'https://platum.kr/feed',
-    country: 'KR',
-  },
-  {
-    name: '더밀크',
-    rssUrl: 'https://www.themiilk.com/feed',
     country: 'KR',
   },
   {

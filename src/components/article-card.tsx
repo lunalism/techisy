@@ -33,7 +33,6 @@ function getSourceColor(source: string): { bg: string; text: string; gradient: s
     '전자신문': { bg: 'bg-indigo-100', text: 'text-indigo-700', gradient: 'from-indigo-500 to-purple-500' },
     '테크M': { bg: 'bg-sky-100', text: 'text-sky-700', gradient: 'from-sky-500 to-blue-500' },
     '플래텀': { bg: 'bg-rose-100', text: 'text-rose-700', gradient: 'from-rose-500 to-pink-500' },
-    '더밀크': { bg: 'bg-teal-100', text: 'text-teal-700', gradient: 'from-teal-500 to-cyan-500' },
     '디지털투데이': { bg: 'bg-violet-100', text: 'text-violet-700', gradient: 'from-violet-500 to-purple-500' },
   }
   return colors[source] || { bg: 'bg-zinc-100', text: 'text-zinc-600', gradient: 'from-zinc-400 to-zinc-500' }
