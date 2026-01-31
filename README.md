@@ -1,36 +1,48 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Techisy
 
-## Getting Started
+한국판 Techmeme - 글로벌과 한국 테크 뉴스를 한눈에
 
-First, run the development server:
+## 소개
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
+Techisy는 전 세계 테크 뉴스와 한국 테크 매체의 뉴스를 한 곳에서 볼 수 있는 뉴스 애그리게이터입니다.
+같은 주제의 기사들을 클러스터링하여 Techmeme 스타일로 보여줍니다.
+
+## 주요 기능
+
+- 글로벌 + 한국 테크 뉴스 통합
+- 실시간 RSS 피드 수집
+- 관련 기사 클러스터링
+- 미니멀하고 깔끔한 UI
+- 모바일 반응형
+
+## 기술 스택
+
+- Next.js 15 (App Router)
+- TypeScript
+- shadcn/ui + Tailwind CSS
+- Supabase (PostgreSQL)
+- Prisma
+- TanStack Query
+- Vercel
+
+## 시작하기
+
+### 필수 조건
+- Node.js 18+
+- pnpm
+
+### 설치
+pnpm install
+
+### 환경 변수
+.env.example을 .env로 복사하고 Supabase URL을 입력하세요.
+
+### 개발 서버 실행
 pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### DB 마이그레이션
+npx prisma migrate dev --name init
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 라이센스
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+MIT
