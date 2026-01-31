@@ -22,12 +22,14 @@ async function fetchArticles(tab: TabValue): Promise<ArticlesResponse> {
 
 function ArticleSkeleton() {
   return (
-    <div className="py-5 animate-pulse">
-      <div className="h-5 bg-zinc-100 rounded w-full max-w-lg mb-3" />
-      <div className="flex items-center gap-2">
-        <div className="h-5 bg-zinc-100 rounded w-16" />
-        <div className="h-4 bg-zinc-50 rounded w-12" />
+    <div className="bg-white border border-zinc-200 rounded-xl p-5 animate-pulse">
+      <div className="h-5 bg-zinc-100 rounded w-20 mb-3" />
+      <div className="space-y-2">
+        <div className="h-4 bg-zinc-100 rounded w-full" />
+        <div className="h-4 bg-zinc-100 rounded w-5/6" />
+        <div className="h-4 bg-zinc-100 rounded w-4/6" />
       </div>
+      <div className="h-3 bg-zinc-50 rounded w-16 mt-4" />
     </div>
   )
 }
@@ -41,8 +43,8 @@ export function ArticleList({ tab }: ArticleListProps) {
 
   if (isLoading) {
     return (
-      <div className="divide-y divide-zinc-100">
-        {Array.from({ length: 5 }).map((_, i) => (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        {Array.from({ length: 6 }).map((_, i) => (
           <ArticleSkeleton key={i} />
         ))}
       </div>
@@ -69,7 +71,7 @@ export function ArticleList({ tab }: ArticleListProps) {
   }
 
   return (
-    <div className="divide-y divide-zinc-100">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
       {data.articles.map((article) => (
         <ArticleCard key={article.id} article={article} />
       ))}

@@ -9,10 +9,10 @@ export default function Home() {
   const [tab, setTab] = useState<TabValue>('all')
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-zinc-50">
       <Header tab={tab} onTabChange={setTab} />
 
-      <main className="mx-auto max-w-2xl px-5 py-4">
+      <main className="mx-auto max-w-6xl px-5 py-6">
         <ArticleList tab={tab} />
       </main>
     </div>

@@ -16,8 +16,8 @@ const tabs: { value: TabValue; label: string }[] = [
 
 export function Header({ tab, onTabChange }: HeaderProps) {
   return (
-    <header className="bg-white/80 backdrop-blur-sm sticky top-0 z-10 border-b border-zinc-100">
-      <div className="mx-auto max-w-2xl px-5">
+    <header className="bg-white/80 backdrop-blur-sm sticky top-0 z-10 border-b border-zinc-200">
+      <div className="mx-auto max-w-6xl px-5">
         <div className="flex items-center justify-between h-14">
           <Link href="/" className="inline-block">
             <h1 className="text-lg font-bold tracking-tight text-zinc-900">

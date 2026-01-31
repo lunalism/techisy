@@ -19,29 +19,47 @@ function formatTimeAgo(date: Date | null): string {
   return '방금 전'
 }
 
+function getSourceColor(source: string): string {
+  const colors: Record<string, string> = {
+    'Techmeme': 'bg-rose-100 text-rose-700',
+    'TechCrunch': 'bg-emerald-100 text-emerald-700',
+    'The Verge': 'bg-purple-100 text-purple-700',
+    '바이라인네트워크': 'bg-blue-100 text-blue-700',
+    '디지털투데이': 'bg-amber-100 text-amber-700',
+    '아이티데일리': 'bg-cyan-100 text-cyan-700',
+    '블로터': 'bg-green-100 text-green-700',
+    '지디넷코리아': 'bg-orange-100 text-orange-700',
+  }
+  return colors[source] || 'bg-zinc-100 text-zinc-600'
+}
+
 export function ArticleCard({ article }: ArticleCardProps) {
   return (
-    <article className="py-5 group">
-      <a
-        href={article.url}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="block"
-      >
-        <h3 className="text-[17px] font-semibold text-zinc-900 leading-snug group-hover:underline underline-offset-2 decoration-zinc-300">
-          {article.title}
-        </h3>
-      </a>
-      <div className="mt-2 flex items-center gap-2">
-        <span className="inline-flex items-center px-2 py-0.5 text-[11px] font-medium bg-zinc-100 text-zinc-600 rounded">
-          {article.source}
-        </span>
-        {article.publishedAt && (
-          <span className="text-xs text-zinc-400">
-            {formatTimeAgo(article.publishedAt)}
+    <a
+      href={article.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="block group"
+    >
+      <article className="h-full bg-white border border-zinc-200 rounded-xl p-5 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-200">
+        <div className="flex flex-col h-full">
+          <span
+            className={`self-start px-2.5 py-1 text-[11px] font-semibold rounded-md ${getSourceColor(article.source)}`}
+          >
+            {article.source}
           </span>
-        )}
-      </div>
-    </article>
+
+          <h3 className="mt-3 text-[15px] font-semibold text-zinc-900 leading-snug line-clamp-3 flex-1">
+            {article.title}
+          </h3>
+
+          {article.publishedAt && (
+            <p className="mt-3 text-xs text-zinc-400">
+              {formatTimeAgo(article.publishedAt)}
+            </p>
+          )}
+        </div>
+      </article>
+    </a>
   )
 }
