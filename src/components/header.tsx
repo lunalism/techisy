@@ -20,19 +20,27 @@ export function Header({ tab, onTabChange }: HeaderProps) {
             </h1>
           </Link>
 
-          <Tabs value={tab} onValueChange={(v) => onTabChange(v as TabValue)}>
-            <TabsList className="h-8">
-              <TabsTrigger value="all" className="text-xs px-3 h-7">
-                All
-              </TabsTrigger>
-              <TabsTrigger value="global" className="text-xs px-3 h-7">
-                Global
-              </TabsTrigger>
-              <TabsTrigger value="korea" className="text-xs px-3 h-7">
-                Korea
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
+          <div className="flex items-center gap-4">
+            <Tabs value={tab} onValueChange={(v) => onTabChange(v as TabValue)}>
+              <TabsList className="h-8">
+                <TabsTrigger value="all" className="text-xs px-3 h-7">
+                  All
+                </TabsTrigger>
+                <TabsTrigger value="global" className="text-xs px-3 h-7">
+                  Global
+                </TabsTrigger>
+                <TabsTrigger value="korea" className="text-xs px-3 h-7">
+                  Korea
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
+            <Link
+              href="/admin"
+              className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Admin
+            </Link>
+          </div>
         </div>
       </div>
     </header>
