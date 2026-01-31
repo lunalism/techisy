@@ -50,6 +50,11 @@ const sources = [
     rssUrl: 'https://www.digitaltoday.co.kr/rss/allArticle.xml',
     country: 'KR',
   },
+  {
+    name: 'AI타임스',
+    rssUrl: 'https://cdn.aitimes.com/rss/gn_rss_allArticle.xml',
+    country: 'KR',
+  },
 ]
 
 async function main() {
