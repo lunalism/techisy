@@ -41,7 +41,7 @@ export async function fetchRssFeed(
             url: item.link,
             source: sourceName,
             sourceUrl: rssUrl,
-            publishedAt: item.isoDate ? new Date(item.isoDate) : null,
+            publishedAt: item.isoDate ? new Date(item.isoDate) : new Date(),
           },
         })
         result.added++
