@@ -4,6 +4,7 @@ export interface Article {
   url: string
   source: string
   sourceUrl: string | null
+  imageUrl: string | null
   publishedAt: Date | null
   createdAt: Date
   clusterId: string | null

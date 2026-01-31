@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import type { Article } from '@/types'
 
 interface ArticleCardProps {
@@ -19,21 +20,23 @@ function formatTimeAgo(date: Date | null): string {
   return '방금 전'
 }
 
-function getSourceColor(source: string): string {
-  const colors: Record<string, string> = {
-    'Techmeme': 'bg-rose-100 text-rose-700',
-    'TechCrunch': 'bg-emerald-100 text-emerald-700',
-    'The Verge': 'bg-purple-100 text-purple-700',
-    '바이라인네트워크': 'bg-blue-100 text-blue-700',
-    '디지털투데이': 'bg-amber-100 text-amber-700',
-    '아이티데일리': 'bg-cyan-100 text-cyan-700',
-    '블로터': 'bg-green-100 text-green-700',
-    '지디넷코리아': 'bg-orange-100 text-orange-700',
+function getSourceColor(source: string): { bg: string; text: string; gradient: string } {
+  const colors: Record<string, { bg: string; text: string; gradient: string }> = {
+    'Techmeme': { bg: 'bg-rose-100', text: 'text-rose-700', gradient: 'from-rose-500 to-pink-500' },
+    'TechCrunch': { bg: 'bg-emerald-100', text: 'text-emerald-700', gradient: 'from-emerald-500 to-teal-500' },
+    'The Verge': { bg: 'bg-purple-100', text: 'text-purple-700', gradient: 'from-purple-500 to-violet-500' },
+    '바이라인네트워크': { bg: 'bg-blue-100', text: 'text-blue-700', gradient: 'from-blue-500 to-indigo-500' },
+    '디지털투데이': { bg: 'bg-amber-100', text: 'text-amber-700', gradient: 'from-amber-500 to-orange-500' },
+    '아이티데일리': { bg: 'bg-cyan-100', text: 'text-cyan-700', gradient: 'from-cyan-500 to-sky-500' },
+    '블로터': { bg: 'bg-green-100', text: 'text-green-700', gradient: 'from-green-500 to-emerald-500' },
+    '지디넷코리아': { bg: 'bg-orange-100', text: 'text-orange-700', gradient: 'from-orange-500 to-red-500' },
   }
-  return colors[source] || 'bg-zinc-100 text-zinc-600'
+  return colors[source] || { bg: 'bg-zinc-100', text: 'text-zinc-600', gradient: 'from-zinc-400 to-zinc-500' }
 }
 
 export function ArticleCard({ article }: ArticleCardProps) {
+  const sourceColor = getSourceColor(article.source)
+
   return (
     <a
       href={article.url}
@@ -41,20 +44,39 @@ export function ArticleCard({ article }: ArticleCardProps) {
       rel="noopener noreferrer"
       className="block group"
     >
-      <article className="h-full bg-white border border-zinc-200 rounded-xl p-5 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-200">
-        <div className="flex flex-col h-full">
-          <span
-            className={`self-start px-2.5 py-1 text-[11px] font-semibold rounded-md ${getSourceColor(article.source)}`}
-          >
-            {article.source}
-          </span>
+      <article className="h-full bg-white border border-zinc-200 rounded-xl overflow-hidden shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-200">
+        {/* Image or gradient placeholder */}
+        <div className="relative aspect-[16/9] overflow-hidden">
+          {article.imageUrl ? (
+            <Image
+              src={article.imageUrl}
+              alt={article.title}
+              fill
+              className="object-cover group-hover:scale-105 transition-transform duration-300"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              unoptimized
+            />
+          ) : (
+            <div className={`w-full h-full bg-gradient-to-br ${sourceColor.gradient} opacity-80`} />
+          )}
+          {/* Source badge overlay */}
+          <div className="absolute top-3 left-3">
+            <span
+              className={`px-2.5 py-1 text-[11px] font-semibold rounded-md ${sourceColor.bg} ${sourceColor.text} shadow-sm`}
+            >
+              {article.source}
+            </span>
+          </div>
+        </div>
 
-          <h3 className="mt-3 text-[15px] font-semibold text-zinc-900 leading-snug line-clamp-3 flex-1">
+        {/* Content */}
+        <div className="p-4">
+          <h3 className="text-[15px] font-semibold text-zinc-900 leading-snug line-clamp-2 group-hover:text-zinc-700 transition-colors">
             {article.title}
           </h3>
 
           {article.publishedAt && (
-            <p className="mt-3 text-xs text-zinc-400">
+            <p className="mt-2 text-xs text-zinc-400">
               {formatTimeAgo(article.publishedAt)}
             </p>
           )}

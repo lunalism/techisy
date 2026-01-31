@@ -1,18 +1,13 @@
 import Parser from 'rss-parser'
 import { prisma } from './prisma'
+import { scrapeOgImage } from './og-scraper'
 
 const parser = new Parser()
-
-export interface FeedItem {
-  title: string
-  link: string
-  pubDate?: string
-  isoDate?: string
-}
 
 export interface FetchResult {
   source: string
   added: number
+  updated: number
   errors: string[]
 }
 
@@ -23,6 +18,7 @@ export async function fetchRssFeed(
   const result: FetchResult = {
     source: sourceName,
     added: 0,
+    updated: 0,
     errors: [],
   }
 
@@ -33,20 +29,39 @@ export async function fetchRssFeed(
       if (!item.title || !item.link) continue
 
       try {
-        await prisma.article.upsert({
+        // Check if article exists
+        const existing = await prisma.article.findUnique({
           where: { url: item.link },
-          update: {},
-          create: {
-            title: item.title,
-            url: item.link,
-            source: sourceName,
-            sourceUrl: rssUrl,
-            publishedAt: item.isoDate ? new Date(item.isoDate) : new Date(),
-          },
         })
-        result.added++
+
+        if (existing) {
+          // Update image if missing
+          if (!existing.imageUrl) {
+            const imageUrl = await scrapeOgImage(item.link)
+            if (imageUrl) {
+              await prisma.article.update({
+                where: { url: item.link },
+                data: { imageUrl },
+              })
+              result.updated++
+            }
+          }
+        } else {
+          // Create new article with image
+          const imageUrl = await scrapeOgImage(item.link)
+          await prisma.article.create({
+            data: {
+              title: item.title,
+              url: item.link,
+              source: sourceName,
+              sourceUrl: rssUrl,
+              imageUrl,
+              publishedAt: item.isoDate ? new Date(item.isoDate) : new Date(),
+            },
+          })
+          result.added++
+        }
       } catch (err) {
-        // Skip duplicate URLs silently
         if (!(err instanceof Error && err.message.includes('Unique constraint'))) {
           result.errors.push(`Failed to save: ${item.title}`)
         }
@@ -72,4 +87,34 @@ export async function fetchAllFeeds(): Promise<FetchResult[]> {
   }
 
   return results
+}
+
+// Update images for articles without images
+export async function updateMissingImages(): Promise<{ updated: number; failed: number }> {
+  const articles = await prisma.article.findMany({
+    where: { imageUrl: null },
+    take: 50,
+  })
+
+  let updated = 0
+  let failed = 0
+
+  for (const article of articles) {
+    try {
+      const imageUrl = await scrapeOgImage(article.url)
+      if (imageUrl) {
+        await prisma.article.update({
+          where: { id: article.id },
+          data: { imageUrl },
+        })
+        updated++
+      } else {
+        failed++
+      }
+    } catch {
+      failed++
+    }
+  }
+
+  return { updated, failed }
 }

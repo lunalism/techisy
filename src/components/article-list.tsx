@@ -22,14 +22,15 @@ async function fetchArticles(tab: TabValue): Promise<ArticlesResponse> {
 
 function ArticleSkeleton() {
   return (
-    <div className="bg-white border border-zinc-200 rounded-xl p-5 animate-pulse">
-      <div className="h-5 bg-zinc-100 rounded w-20 mb-3" />
-      <div className="space-y-2">
-        <div className="h-4 bg-zinc-100 rounded w-full" />
-        <div className="h-4 bg-zinc-100 rounded w-5/6" />
-        <div className="h-4 bg-zinc-100 rounded w-4/6" />
+    <div className="bg-white border border-zinc-200 rounded-xl overflow-hidden animate-pulse">
+      <div className="aspect-[16/9] bg-zinc-100" />
+      <div className="p-4">
+        <div className="space-y-2">
+          <div className="h-4 bg-zinc-100 rounded w-full" />
+          <div className="h-4 bg-zinc-100 rounded w-4/5" />
+        </div>
+        <div className="h-3 bg-zinc-50 rounded w-16 mt-3" />
       </div>
-      <div className="h-3 bg-zinc-50 rounded w-16 mt-4" />
     </div>
   )
 }

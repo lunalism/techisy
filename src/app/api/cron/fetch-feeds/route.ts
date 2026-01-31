@@ -16,6 +16,7 @@ export async function GET(request: NextRequest) {
     const results = await fetchAllFeeds()
 
     const totalAdded = results.reduce((sum, r) => sum + r.added, 0)
+    const totalUpdated = results.reduce((sum, r) => sum + r.updated, 0)
     const totalErrors = results.reduce((sum, r) => sum + r.errors.length, 0)
 
     return NextResponse.json({
@@ -23,6 +24,7 @@ export async function GET(request: NextRequest) {
       summary: {
         sourcesProcessed: results.length,
         articlesAdded: totalAdded,
+        imagesUpdated: totalUpdated,
         errors: totalErrors,
       },
       details: results,
