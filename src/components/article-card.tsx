@@ -1,5 +1,3 @@
-import { Card, CardContent } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
 import type { Article } from '@/types'
 
 interface ArticleCardProps {
@@ -15,35 +13,34 @@ function formatTimeAgo(date: Date | null): string {
   const hours = Math.floor(minutes / 60)
   const days = Math.floor(hours / 24)
 
-  if (days > 0) return `${days}d ago`
-  if (hours > 0) return `${hours}h ago`
-  if (minutes > 0) return `${minutes}m ago`
-  return 'just now'
+  if (days > 0) return `${days}일 전`
+  if (hours > 0) return `${hours}시간 전`
+  if (minutes > 0) return `${minutes}분 전`
+  return '방금 전'
 }
 
 export function ArticleCard({ article }: ArticleCardProps) {
   return (
-    <Card className="border-0 border-b border-border rounded-none shadow-none hover:bg-muted/50 transition-colors">
-      <CardContent className="px-0 py-4">
-        <a
-          href={article.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="group block"
-        >
-          <h3 className="text-base font-medium text-foreground leading-snug group-hover:text-primary transition-colors">
-            {article.title}
-          </h3>
-        </a>
-        <div className="mt-2 flex items-center gap-2 text-sm text-muted-foreground">
-          <Badge variant="secondary" className="font-normal">
-            {article.source}
-          </Badge>
-          {article.publishedAt && (
-            <span>{formatTimeAgo(article.publishedAt)}</span>
-          )}
-        </div>
-      </CardContent>
-    </Card>
+    <article className="py-4 border-b border-border last:border-b-0 hover:bg-muted/30 transition-colors -mx-4 px-4">
+      <a
+        href={article.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="group block"
+      >
+        <h3 className="text-[15px] font-medium text-foreground leading-relaxed group-hover:text-primary/80 transition-colors">
+          {article.title}
+        </h3>
+      </a>
+      <p className="mt-1.5 text-sm text-muted-foreground">
+        {article.source}
+        {article.publishedAt && (
+          <>
+            <span className="mx-1.5">·</span>
+            {formatTimeAgo(article.publishedAt)}
+          </>
+        )}
+      </p>
+    </article>
   )
 }

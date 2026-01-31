@@ -24,11 +24,8 @@ async function fetchArticles(tab: TabValue): Promise<ArticlesResponse> {
 function ArticleSkeleton() {
   return (
     <div className="py-4 border-b border-border">
-      <Skeleton className="h-5 w-full max-w-lg mb-2" />
-      <div className="flex items-center gap-2">
-        <Skeleton className="h-5 w-20" />
-        <Skeleton className="h-4 w-16" />
-      </div>
+      <Skeleton className="h-5 w-full max-w-md mb-2" />
+      <Skeleton className="h-4 w-32" />
     </div>
   )
 }
@@ -37,12 +34,12 @@ export function ArticleList({ tab }: ArticleListProps) {
   const { data, isLoading, error } = useQuery({
     queryKey: ['articles', tab],
     queryFn: () => fetchArticles(tab),
-    staleTime: 1000 * 60 * 5, // 5 minutes
+    staleTime: 1000 * 60 * 5,
   })
 
   if (isLoading) {
     return (
-      <div className="space-y-0">
+      <div>
         {Array.from({ length: 10 }).map((_, i) => (
           <ArticleSkeleton key={i} />
         ))}
@@ -52,22 +49,22 @@ export function ArticleList({ tab }: ArticleListProps) {
 
   if (error) {
     return (
-      <div className="py-8 text-center text-muted-foreground">
-        Failed to load articles. Please try again.
+      <div className="py-12 text-center text-muted-foreground">
+        기사를 불러오는데 실패했습니다.
       </div>
     )
   }
 
   if (!data?.articles.length) {
     return (
-      <div className="py-8 text-center text-muted-foreground">
-        No articles found. Try fetching feeds first.
+      <div className="py-12 text-center text-muted-foreground">
+        기사가 없습니다.
       </div>
     )
   }
 
   return (
-    <div className="space-y-0">
+    <div>
       {data.articles.map((article) => (
         <ArticleCard key={article.id} article={article} />
       ))}
