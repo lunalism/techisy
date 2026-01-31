@@ -22,14 +22,20 @@ function formatTimeAgo(date: Date | null): string {
 
 function getSourceColor(source: string): { bg: string; text: string; gradient: string } {
   const colors: Record<string, { bg: string; text: string; gradient: string }> = {
-    'Techmeme': { bg: 'bg-rose-100', text: 'text-rose-700', gradient: 'from-rose-500 to-pink-500' },
+    // US Sources
     'TechCrunch': { bg: 'bg-emerald-100', text: 'text-emerald-700', gradient: 'from-emerald-500 to-teal-500' },
     'The Verge': { bg: 'bg-purple-100', text: 'text-purple-700', gradient: 'from-purple-500 to-violet-500' },
-    '바이라인네트워크': { bg: 'bg-blue-100', text: 'text-blue-700', gradient: 'from-blue-500 to-indigo-500' },
-    '디지털투데이': { bg: 'bg-amber-100', text: 'text-amber-700', gradient: 'from-amber-500 to-orange-500' },
-    '아이티데일리': { bg: 'bg-cyan-100', text: 'text-cyan-700', gradient: 'from-cyan-500 to-sky-500' },
-    '블로터': { bg: 'bg-green-100', text: 'text-green-700', gradient: 'from-green-500 to-emerald-500' },
-    '지디넷코리아': { bg: 'bg-orange-100', text: 'text-orange-700', gradient: 'from-orange-500 to-red-500' },
+    'Wired': { bg: 'bg-slate-100', text: 'text-slate-700', gradient: 'from-slate-600 to-slate-800' },
+    'Ars Technica': { bg: 'bg-orange-100', text: 'text-orange-700', gradient: 'from-orange-500 to-red-500' },
+    'Engadget': { bg: 'bg-blue-100', text: 'text-blue-700', gradient: 'from-blue-500 to-indigo-500' },
+    'Reuters Tech': { bg: 'bg-amber-100', text: 'text-amber-700', gradient: 'from-amber-500 to-orange-500' },
+    // KR Sources
+    '블로터': { bg: 'bg-sky-100', text: 'text-sky-700', gradient: 'from-sky-500 to-blue-500' },
+    '지디넷코리아': { bg: 'bg-red-100', text: 'text-red-700', gradient: 'from-red-500 to-rose-500' },
+    '전자신문': { bg: 'bg-indigo-100', text: 'text-indigo-700', gradient: 'from-indigo-500 to-purple-500' },
+    '바이라인네트워크': { bg: 'bg-teal-100', text: 'text-teal-700', gradient: 'from-teal-500 to-cyan-500' },
+    'IT조선': { bg: 'bg-rose-100', text: 'text-rose-700', gradient: 'from-rose-500 to-pink-500' },
+    '디지털데일리': { bg: 'bg-violet-100', text: 'text-violet-700', gradient: 'from-violet-500 to-purple-500' },
   }
   return colors[source] || { bg: 'bg-zinc-100', text: 'text-zinc-600', gradient: 'from-zinc-400 to-zinc-500' }
 }

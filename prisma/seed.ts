@@ -3,12 +3,7 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 const sources = [
-  // Global
-  {
-    name: 'Techmeme',
-    rssUrl: 'https://www.techmeme.com/feed.xml',
-    country: 'US',
-  },
+  // US - Global Tech Media
   {
     name: 'TechCrunch',
     rssUrl: 'https://techcrunch.com/feed/',
@@ -19,60 +14,101 @@ const sources = [
     rssUrl: 'https://www.theverge.com/rss/index.xml',
     country: 'US',
   },
-  // Korea
+  {
+    name: 'Wired',
+    rssUrl: 'https://www.wired.com/feed/rss',
+    country: 'US',
+  },
+  {
+    name: 'Ars Technica',
+    rssUrl: 'https://feeds.arstechnica.com/arstechnica/index',
+    country: 'US',
+  },
+  {
+    name: 'Engadget',
+    rssUrl: 'https://www.engadget.com/rss.xml',
+    country: 'US',
+  },
+  {
+    name: 'Reuters Tech',
+    rssUrl: 'https://www.reuters.com/technology/rss',
+    country: 'US',
+  },
+  // KR - Korean Tech Media
+  {
+    name: '블로터',
+    rssUrl: 'https://www.bloter.net/feed',
+    country: 'KR',
+  },
+  {
+    name: '지디넷코리아',
+    rssUrl: 'https://zdnet.co.kr/rss/newsall.xml',
+    country: 'KR',
+  },
+  {
+    name: '전자신문',
+    rssUrl: 'https://rss.etnews.com/Section901.xml',
+    country: 'KR',
+  },
   {
     name: '바이라인네트워크',
     rssUrl: 'https://byline.network/feed/',
     country: 'KR',
   },
   {
-    name: '디지털투데이',
-    rssUrl: 'https://www.digitaltoday.co.kr/rss/allArticle.xml',
+    name: 'IT조선',
+    rssUrl: 'https://it.chosun.com/rss/',
     country: 'KR',
   },
   {
-    name: '아이티데일리',
-    rssUrl: 'https://www.itdaily.kr/rss/S1N9.xml',
+    name: '디지털데일리',
+    rssUrl: 'https://www.ddaily.co.kr/rss/rss.xml',
     country: 'KR',
   },
 ]
 
 async function main() {
-  console.log('Seeding sources...')
+  console.log('Cleaning up old data...')
 
-  // 기존 404 에러 나는 소스들 비활성화
-  const bloter = await prisma.source.findFirst({
-    where: { rssUrl: 'https://www.bloter.net/feed' },
+  // Delete Techmeme source and its articles
+  const techmeme = await prisma.source.findFirst({
+    where: { name: 'Techmeme' },
   })
-  if (bloter) {
-    await prisma.source.update({
-      where: { id: bloter.id },
-      data: { active: false },
+  if (techmeme) {
+    await prisma.article.deleteMany({
+      where: { source: 'Techmeme' },
     })
-    console.log('  - 블로터 비활성화')
+    await prisma.source.delete({
+      where: { id: techmeme.id },
+    })
+    console.log('  - Techmeme 삭제 완료')
   }
 
-  const zdnet = await prisma.source.findFirst({
-    where: { rssUrl: 'https://zdnet.co.kr/rss/newsall.xml' },
-  })
-  if (zdnet) {
-    await prisma.source.update({
-      where: { id: zdnet.id },
-      data: { active: false },
-    })
-    console.log('  - 지디넷 비활성화')
+  // Deactivate old invalid sources
+  const oldSources = ['디지털투데이', '아이티데일리']
+  for (const name of oldSources) {
+    const source = await prisma.source.findFirst({ where: { name } })
+    if (source) {
+      await prisma.source.update({
+        where: { id: source.id },
+        data: { active: false },
+      })
+      console.log(`  - ${name} 비활성화`)
+    }
   }
+
+  console.log('\nSeeding new sources...')
 
   for (const source of sources) {
     const result = await prisma.source.upsert({
       where: { rssUrl: source.rssUrl },
-      update: { name: source.name, country: source.country },
-      create: source,
+      update: { name: source.name, country: source.country, active: true },
+      create: { ...source, active: true },
     })
     console.log(`  + ${result.name} (${result.country})`)
   }
 
-  console.log('Seeding completed!')
+  console.log('\nSeeding completed!')
 }
 
 main()
