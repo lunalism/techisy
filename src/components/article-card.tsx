@@ -21,26 +21,27 @@ function formatTimeAgo(date: Date | null): string {
 
 export function ArticleCard({ article }: ArticleCardProps) {
   return (
-    <article className="py-4 border-b border-border last:border-b-0 hover:bg-muted/30 transition-colors -mx-4 px-4">
+    <article className="py-5 group">
       <a
         href={article.url}
         target="_blank"
         rel="noopener noreferrer"
-        className="group block"
+        className="block"
       >
-        <h3 className="text-[15px] font-medium text-foreground leading-relaxed group-hover:text-primary/80 transition-colors">
+        <h3 className="text-[17px] font-semibold text-zinc-900 leading-snug group-hover:underline underline-offset-2 decoration-zinc-300">
           {article.title}
         </h3>
       </a>
-      <p className="mt-1.5 text-sm text-muted-foreground">
-        {article.source}
+      <div className="mt-2 flex items-center gap-2">
+        <span className="inline-flex items-center px-2 py-0.5 text-[11px] font-medium bg-zinc-100 text-zinc-600 rounded">
+          {article.source}
+        </span>
         {article.publishedAt && (
-          <>
-            <span className="mx-1.5">·</span>
+          <span className="text-xs text-zinc-400">
             {formatTimeAgo(article.publishedAt)}
-          </>
+          </span>
         )}
-      </p>
+      </div>
     </article>
   )
 }
