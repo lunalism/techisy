@@ -30,7 +30,6 @@ function getSourceColor(source: string): { bg: string; text: string; gradient: s
     'Engadget': { bg: 'bg-blue-100', text: 'text-blue-700', gradient: 'from-blue-500 to-indigo-500' },
     'Reuters Tech': { bg: 'bg-amber-100', text: 'text-amber-700', gradient: 'from-amber-500 to-orange-500' },
     // KR Sources
-    '전자신문': { bg: 'bg-indigo-100', text: 'text-indigo-700', gradient: 'from-indigo-500 to-purple-500' },
     '테크M': { bg: 'bg-sky-100', text: 'text-sky-700', gradient: 'from-sky-500 to-blue-500' },
     '플래텀': { bg: 'bg-rose-100', text: 'text-rose-700', gradient: 'from-rose-500 to-pink-500' },
     '디지털투데이': { bg: 'bg-violet-100', text: 'text-violet-700', gradient: 'from-violet-500 to-purple-500' },

@@ -36,11 +36,6 @@ const sources = [
   },
   // KR - Korean Tech Media (verified working, tech-only feeds)
   {
-    name: '전자신문',
-    rssUrl: 'https://rss.etnews.com/Section902.xml', // IT/과학 섹션
-    country: 'KR',
-  },
-  {
     name: '테크M',
     rssUrl: 'https://www.techm.kr/rss/allArticle.xml',
     country: 'KR',
