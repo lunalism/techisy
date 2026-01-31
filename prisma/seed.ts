@@ -34,70 +34,36 @@ const sources = [
     rssUrl: 'https://www.reuters.com/technology/rss',
     country: 'US',
   },
-  // KR - Korean Tech Media
-  {
-    name: '블로터',
-    rssUrl: 'https://www.bloter.net/feed',
-    country: 'KR',
-  },
-  {
-    name: '지디넷코리아',
-    rssUrl: 'https://zdnet.co.kr/rss/newsall.xml',
-    country: 'KR',
-  },
+  // KR - Korean Tech Media (verified working)
   {
     name: '전자신문',
     rssUrl: 'https://rss.etnews.com/Section901.xml',
     country: 'KR',
   },
   {
-    name: '바이라인네트워크',
-    rssUrl: 'https://byline.network/feed/',
+    name: '테크M',
+    rssUrl: 'https://www.techm.kr/rss/allArticle.xml',
     country: 'KR',
   },
   {
-    name: 'IT조선',
-    rssUrl: 'https://it.chosun.com/rss/',
+    name: '플래텀',
+    rssUrl: 'https://platum.kr/feed',
     country: 'KR',
   },
   {
-    name: '디지털데일리',
-    rssUrl: 'https://www.ddaily.co.kr/rss/rss.xml',
+    name: '더밀크',
+    rssUrl: 'https://www.themiilk.com/feed',
+    country: 'KR',
+  },
+  {
+    name: '디지털투데이',
+    rssUrl: 'https://www.digitaltoday.co.kr/rss/allArticle.xml',
     country: 'KR',
   },
 ]
 
 async function main() {
-  console.log('Cleaning up old data...')
-
-  // Delete Techmeme source and its articles
-  const techmeme = await prisma.source.findFirst({
-    where: { name: 'Techmeme' },
-  })
-  if (techmeme) {
-    await prisma.article.deleteMany({
-      where: { source: 'Techmeme' },
-    })
-    await prisma.source.delete({
-      where: { id: techmeme.id },
-    })
-    console.log('  - Techmeme 삭제 완료')
-  }
-
-  // Deactivate old invalid sources
-  const oldSources = ['디지털투데이', '아이티데일리']
-  for (const name of oldSources) {
-    const source = await prisma.source.findFirst({ where: { name } })
-    if (source) {
-      await prisma.source.update({
-        where: { id: source.id },
-        data: { active: false },
-      })
-      console.log(`  - ${name} 비활성화`)
-    }
-  }
-
-  console.log('\nSeeding new sources...')
+  console.log('Seeding sources...')
 
   for (const source of sources) {
     const result = await prisma.source.upsert({
