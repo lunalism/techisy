@@ -15,8 +15,40 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'Techisy - Tech News Aggregator',
-  description: '한국판 Techmeme - 글로벌 & 국내 테크 뉴스를 한눈에',
+  title: 'Techisy - 글로벌 & 한국 테크 뉴스',
+  description:
+    'TechCrunch, The Verge 등 해외 테크 뉴스와 한국 테크 뉴스를 한눈에. 매일 업데이트되는 테크 뉴스 애그리게이터.',
+  keywords: '테크 뉴스, tech news, IT 뉴스, 스타트업, AI, 기술 뉴스',
+  authors: [{ name: 'Techisy' }],
+  metadataBase: new URL('https://techisy.vercel.app'),
+  openGraph: {
+    title: 'Techisy - 글로벌 & 한국 테크 뉴스',
+    description:
+      'TechCrunch, The Verge 등 해외 테크 뉴스와 한국 테크 뉴스를 한눈에. 매일 업데이트되는 테크 뉴스 애그리게이터.',
+    url: 'https://techisy.vercel.app',
+    siteName: 'Techisy',
+    type: 'website',
+    locale: 'ko_KR',
+    images: [
+      {
+        url: '/opengraph-image',
+        width: 1200,
+        height: 630,
+        alt: 'Techisy - 글로벌 & 한국 테크 뉴스',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Techisy - 글로벌 & 한국 테크 뉴스',
+    description:
+      'TechCrunch, The Verge 등 해외 테크 뉴스와 한국 테크 뉴스를 한눈에.',
+    images: ['/opengraph-image'],
+  },
+  icons: {
+    icon: '/icon.png',
+    apple: '/apple-icon.png',
+  },
 }
 
 export default function RootLayout({
