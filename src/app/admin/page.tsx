@@ -1,8 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -156,12 +158,42 @@ function AddSourceDialog({ onSuccess }: { onSuccess: () => void }) {
 }
 
 export default function AdminPage() {
+  const router = useRouter()
   const queryClient = useQueryClient()
   const [fetchStatus, setFetchStatus] = useState<string | null>(null)
+  const [authState, setAuthState] = useState<'loading' | 'unauthorized' | 'authorized'>('loading')
+  const [userEmail, setUserEmail] = useState<string | null>(null)
+
+  useEffect(() => {
+    async function checkAuth() {
+      const supabase = createClient()
+      const { data: { user } } = await supabase.auth.getUser()
+
+      if (!user) {
+        router.push('/login?redirectTo=/admin')
+        return
+      }
+
+      // Check if user is admin
+      const res = await fetch('/api/auth/check-admin')
+      const { isAdmin } = await res.json()
+
+      if (!isAdmin) {
+        setAuthState('unauthorized')
+        return
+      }
+
+      setUserEmail(user.email ?? null)
+      setAuthState('authorized')
+    }
+
+    checkAuth()
+  }, [router])
 
   const { data: sources, isLoading } = useQuery({
     queryKey: ['sources'],
     queryFn: fetchSources,
+    enabled: authState === 'authorized',
   })
 
   const toggleMutation = useMutation({
@@ -186,6 +218,35 @@ export default function AdminPage() {
     onError: () => setFetchStatus('피드 수집 실패'),
   })
 
+  const handleLogout = async () => {
+    const supabase = createClient()
+    await supabase.auth.signOut()
+    router.push('/')
+    router.refresh()
+  }
+
+  if (authState === 'loading') {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-zinc-500">인증 확인 중...</div>
+      </div>
+    )
+  }
+
+  if (authState === 'unauthorized') {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-xl font-bold text-zinc-900 mb-2">접근 권한 없음</h1>
+          <p className="text-zinc-500 mb-4">관리자만 접근할 수 있습니다.</p>
+          <Link href="/" className="text-sm text-blue-600 hover:underline">
+            메인으로 돌아가기
+          </Link>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen bg-background">
       <header className="border-b border-border bg-background sticky top-0 z-10">
@@ -197,9 +258,18 @@ export default function AdminPage() {
               </Link>
               <span className="text-sm text-muted-foreground">Admin</span>
             </div>
-            <Link href="/" className="text-sm text-muted-foreground hover:text-foreground">
-              ← 메인으로
-            </Link>
+            <div className="flex items-center gap-4">
+              <span className="text-sm text-muted-foreground">{userEmail}</span>
+              <button
+                onClick={handleLogout}
+                className="text-sm text-muted-foreground hover:text-foreground"
+              >
+                로그아웃
+              </button>
+              <Link href="/" className="text-sm text-muted-foreground hover:text-foreground">
+                ← 메인으로
+              </Link>
+            </div>
           </div>
         </div>
       </header>
