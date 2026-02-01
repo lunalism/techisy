@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import { Clock } from 'lucide-react'
 import type { Article } from '@/types'
+import { getSourceColor } from '@/config/source-colors'
 
 interface ArticleCardProps {
   article: Article
@@ -22,6 +23,8 @@ function formatTimeAgo(date: Date | null): string {
 }
 
 export function ArticleCard({ article }: ArticleCardProps) {
+  const sourceColor = getSourceColor(article.source)
+
   return (
     <a
       href={article.url}
@@ -48,7 +51,10 @@ export function ArticleCard({ article }: ArticleCardProps) {
 
         {/* Content */}
         <div className="pt-4">
-          <span className="text-xs font-medium text-zinc-500 uppercase tracking-wide">
+          <span
+            className="inline-block px-2 py-1 text-xs font-medium text-white uppercase tracking-wide rounded"
+            style={{ backgroundColor: sourceColor }}
+          >
             {article.source}
           </span>
 
