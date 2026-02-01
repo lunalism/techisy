@@ -101,14 +101,14 @@ export default function SearchPage() {
             <p className="text-sm">검색 결과가 없습니다</p>
           </div>
         ) : (
-          <div className="divide-y divide-zinc-100 dark:divide-zinc-800">
+          <div className="divide-y divide-zinc-100 dark:divide-zinc-800 px-4">
             {data?.articles.map((article) => (
               <a
                 key={article.id}
                 href={article.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block px-4 py-4 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors"
+                className="block py-4 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors"
               >
                 <div className="flex items-start gap-3">
                   <span
