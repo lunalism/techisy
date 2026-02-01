@@ -6,7 +6,6 @@ import { usePathname } from 'next/navigation'
 import { useTheme } from 'next-themes'
 import { Home, Search, Settings, User, Sun, Moon, Monitor, X, LayoutGrid, Layers } from 'lucide-react'
 import { useLayout } from '@/contexts/layout-context'
-import { SearchBar } from './search-bar'
 
 const themeOptions = [
   { value: 'light', label: '라이트', icon: Sun },
@@ -30,7 +29,6 @@ export function BottomNav() {
   const { layout, setLayout } = useLayout()
   const [mounted, setMounted] = useState(false)
   const [showSettings, setShowSettings] = useState(false)
-  const [showSearch, setShowSearch] = useState(false)
   const [auth, setAuth] = useState<AuthState | null>(null)
 
   useEffect(() => {
@@ -45,6 +43,7 @@ export function BottomNav() {
   }, [])
 
   const isHome = pathname === '/'
+  const isSearch = pathname === '/search'
   const isLoggedIn = !!auth?.user
   const isAdmin = auth?.isAdmin ?? false
 
@@ -67,13 +66,17 @@ export function BottomNav() {
           </Link>
 
           {/* Search */}
-          <button
-            onClick={() => setShowSearch(true)}
-            className="flex flex-col items-center justify-center flex-1 h-full text-zinc-400 dark:text-zinc-500 transition-colors"
+          <Link
+            href="/search"
+            className={`flex flex-col items-center justify-center flex-1 h-full transition-colors ${
+              isSearch
+                ? 'text-zinc-900 dark:text-white'
+                : 'text-zinc-400 dark:text-zinc-500'
+            }`}
           >
             <Search className="w-6 h-6" />
             <span className="text-xs mt-1">검색</span>
-          </button>
+          </Link>
 
           {/* Settings */}
           <button
@@ -207,39 +210,6 @@ export function BottomNav() {
                   })}
                 </div>
               </div>
-            </div>
-          </div>
-        </>
-      )}
-
-      {/* Search Bottom Sheet */}
-      {showSearch && (
-        <>
-          {/* Backdrop */}
-          <div
-            className="fixed inset-0 bg-black/50 z-50 lg:hidden"
-            onClick={() => setShowSearch(false)}
-          />
-
-          {/* Sheet */}
-          <div className="fixed bottom-0 left-0 right-0 z-50 bg-white dark:bg-zinc-950 rounded-t-2xl lg:hidden pb-safe animate-slide-up">
-            <div className="p-4">
-              {/* Handle */}
-              <div className="w-10 h-1 bg-zinc-300 dark:bg-zinc-700 rounded-full mx-auto mb-4" />
-
-              {/* Header */}
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">검색</h3>
-                <button
-                  onClick={() => setShowSearch(false)}
-                  className="p-2 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
-
-              {/* Search Bar */}
-              <SearchBar onClose={() => setShowSearch(false)} isMobile />
             </div>
           </div>
         </>
