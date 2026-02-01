@@ -44,7 +44,7 @@ export function Header({ tab, onTabChange }: HeaderProps) {
 
   return (
     <header className="bg-white sticky top-0 z-10 border-b border-zinc-100">
-      <div className="mx-auto max-w-5xl px-6">
+      <div className="mx-auto max-w-7xl px-4 md:px-8 lg:px-12">
         <div className="flex items-center justify-between h-16">
           <Link href="/" className="inline-block">
             <h1 className="text-xl font-bold tracking-tight text-zinc-900">

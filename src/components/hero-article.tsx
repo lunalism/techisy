@@ -31,7 +31,7 @@ export function HeroArticle({ article }: HeroArticleProps) {
     >
       <article className="grid grid-cols-1 lg:grid-cols-2 gap-8 bg-zinc-100 rounded-2xl overflow-hidden">
         {/* Image */}
-        <div className="relative aspect-[16/10] lg:aspect-auto lg:min-h-[400px] overflow-hidden">
+        <div className="relative aspect-[16/10] lg:aspect-auto lg:min-h-[420px] overflow-hidden">
           {article.imageUrl ? (
             <Image
               src={article.imageUrl}
