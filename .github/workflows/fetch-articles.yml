@@ -1,0 +1,27 @@
+name: Fetch Articles
+
+on:
+  schedule:
+    - cron: '*/10 * * * *'  # Every 10 minutes
+  workflow_dispatch:  # Manual trigger
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch RSS feeds
+        run: |
+          response=$(curl -s -w "\n%{http_code}" \
+            -X GET "https://techisy.vercel.app/api/cron/fetch-feeds" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}")
+
+          http_code=$(echo "$response" | tail -n1)
+          body=$(echo "$response" | sed '$d')
+
+          echo "Response: $body"
+          echo "HTTP Code: $http_code"
+
+          if [ "$http_code" -ne 200 ]; then
+            echo "Failed with status $http_code"
+            exit 1
+          fi
