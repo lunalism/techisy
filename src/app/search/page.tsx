@@ -70,10 +70,10 @@ export default function SearchPage() {
     <div className="min-h-screen bg-white dark:bg-zinc-950 w-full max-w-[100vw] overflow-x-hidden box-border">
       {/* Header */}
       <header className="sticky top-0 z-10 bg-white dark:bg-zinc-950 border-b border-zinc-100 dark:border-zinc-800 w-full">
-        <div className="flex items-center gap-3 px-4 h-14 w-full min-w-0">
+        <div className="flex items-center gap-2 px-4 h-14 w-full min-w-0">
           <Link
             href="/"
-            className="flex-shrink-0 p-2 -ml-2 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white"
+            className="flex-shrink-0 p-2 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white"
           >
             <ArrowLeft className="w-5 h-5" />
           </Link>
@@ -117,7 +117,7 @@ export default function SearchPage() {
             <p className="text-sm">검색 결과가 없습니다</p>
           </div>
         ) : (
-          <div className="w-full divide-y divide-zinc-100 dark:divide-zinc-800 px-4">
+          <div className="divide-y divide-zinc-100 dark:divide-zinc-800 px-4">
             {data?.articles.map((article) => (
               <a
                 key={article.id}
