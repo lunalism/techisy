@@ -7,6 +7,7 @@ const updateSourceSchema = z.object({
   rssUrl: z.string().url().optional(),
   country: z.enum(['US', 'KR']).optional(),
   active: z.boolean().optional(),
+  color: z.string().regex(/^#[0-9A-Fa-f]{6}$/).optional(),
 })
 
 export async function PATCH(

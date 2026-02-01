@@ -30,6 +30,7 @@ model Source {
   rssUrl  String  @unique
   country String  @default("US") // KR or US
   active  Boolean @default(true)
+  color   String  @default("#6B7280")
 
   @@index([country])
   @@index([active])

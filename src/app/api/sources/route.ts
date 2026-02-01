@@ -7,6 +7,7 @@ const createSourceSchema = z.object({
   rssUrl: z.string().url(),
   country: z.enum(['US', 'KR']),
   active: z.boolean().default(true),
+  color: z.string().regex(/^#[0-9A-Fa-f]{6}$/).default('#6B7280'),
 })
 
 export async function GET() {

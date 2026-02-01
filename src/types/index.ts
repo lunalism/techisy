@@ -8,6 +8,7 @@ export interface Article {
   publishedAt: Date | null
   createdAt: Date
   clusterId: string | null
+  sourceColor?: string
 }
 
 export interface Source {
@@ -16,6 +17,7 @@ export interface Source {
   rssUrl: string
   country: 'KR' | 'US'
   active: boolean
+  color: string
 }
 
 export type TabValue = 'all' | 'global' | 'korea'

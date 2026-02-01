@@ -1,7 +1,6 @@
 import Image from 'next/image'
 import { Clock } from 'lucide-react'
 import type { Article } from '@/types'
-import { getSourceColor } from '@/config/source-colors'
 
 interface HeroSectionProps {
   mainArticle: Article
@@ -25,7 +24,7 @@ function formatTimeAgo(date: Date | null): string {
 }
 
 function MainArticle({ article }: { article: Article }) {
-  const sourceColor = getSourceColor(article.source)
+  const sourceColor = article.sourceColor || '#6B7280'
 
   return (
     <a
@@ -78,7 +77,7 @@ function MainArticle({ article }: { article: Article }) {
 }
 
 function SideArticle({ article }: { article: Article }) {
-  const sourceColor = getSourceColor(article.source)
+  const sourceColor = article.sourceColor || '#6B7280'
 
   return (
     <a

@@ -29,6 +29,10 @@ export async function GET(request: NextRequest) {
       where: { active: true },
     })
 
+    // Create source color map
+    const sourceColorMap = new Map<string, string>()
+    sources.forEach((s: Source) => sourceColorMap.set(s.name, s.color))
+
     const globalSources = sources
       .filter((s: Source) => s.country === 'US')
       .map((s: Source) => s.name)
@@ -57,8 +61,14 @@ export async function GET(request: NextRequest) {
     const data = hasMore ? articles.slice(0, -1) : articles
     const nextCursor = hasMore ? data[data.length - 1]?.id : null
 
+    // Add sourceColor to each article
+    const articlesWithColors = data.map((article) => ({
+      ...article,
+      sourceColor: sourceColorMap.get(article.source) || '#6B7280',
+    }))
+
     return NextResponse.json({
-      articles: data,
+      articles: articlesWithColors,
       nextCursor,
       hasMore,
     })
