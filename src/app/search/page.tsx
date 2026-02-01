@@ -67,7 +67,7 @@ export default function SearchPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white dark:bg-zinc-950">
+    <div className="min-h-screen bg-white dark:bg-zinc-950 w-full max-w-full overflow-x-hidden">
       {/* Header */}
       <header className="sticky top-0 z-10 bg-white dark:bg-zinc-950 border-b border-zinc-100 dark:border-zinc-800">
         <div className="flex items-center gap-3 px-4 h-14">
@@ -117,27 +117,27 @@ export default function SearchPage() {
             <p className="text-sm">검색 결과가 없습니다</p>
           </div>
         ) : (
-          <div className="divide-y divide-zinc-100 dark:divide-zinc-800 px-4">
+          <div className="w-full divide-y divide-zinc-100 dark:divide-zinc-800 px-4">
             {data?.articles.map((article) => (
               <a
                 key={article.id}
                 href={article.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block py-4 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors"
+                className="block w-full py-4 overflow-hidden hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors"
               >
                 <div className="flex items-center justify-between mb-2">
                   <span
-                    className="px-2 py-0.5 text-[10px] font-medium text-white uppercase rounded"
+                    className="flex-shrink-0 px-2 py-0.5 text-[10px] font-medium text-white uppercase rounded"
                     style={{ backgroundColor: article.sourceColor || '#6B7280' }}
                   >
                     {article.source}
                   </span>
-                  <span className="text-xs text-zinc-400 dark:text-zinc-500">
+                  <span className="text-xs text-zinc-400 dark:text-zinc-500 flex-shrink-0">
                     {formatRelativeTime(article.publishedAt)}
                   </span>
                 </div>
-                <h3 className="text-sm font-medium text-zinc-900 dark:text-white leading-relaxed line-clamp-2">
+                <h3 className="text-sm font-medium text-zinc-900 dark:text-white leading-relaxed line-clamp-2 break-words">
                   {article.title}
                 </h3>
               </a>
