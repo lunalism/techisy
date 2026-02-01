@@ -9,48 +9,53 @@ export async function GET() {
     const tomorrow = new Date(today)
     tomorrow.setDate(tomorrow.getDate() + 1)
 
-    // Basic counts
-    const [totalArticles, todayArticles, totalSources, activeSources] = await Promise.all([
-      prisma.article.count(),
-      prisma.article.count({
-        where: {
-          createdAt: {
-            gte: today,
-            lt: tomorrow,
-          },
-        },
-      }),
-      prisma.source.count(),
-      prisma.source.count({ where: { active: true } }),
-    ])
-
-    // Get all sources with colors
+    // Get all sources first (fast query)
     const sources = await prisma.source.findMany({
-      select: { name: true, color: true, country: true },
+      select: { name: true, color: true, country: true, active: true },
     })
+
+    const totalSources = sources.length
+    const activeSources = sources.filter(s => s.active).length
     const sourceMap = new Map(sources.map(s => [s.name, { color: s.color, country: s.country }]))
 
-    // Articles by source
-    const articlesBySourceRaw = await prisma.article.groupBy({
-      by: ['source'],
-      _count: { source: true },
-      orderBy: { _count: { source: 'desc' } },
+    // Basic counts - run sequentially for connection pool stability
+    const totalArticles = await prisma.article.count()
+
+    const todayArticles = await prisma.article.count({
+      where: {
+        createdAt: {
+          gte: today,
+          lt: tomorrow,
+        },
+      },
     })
+
+    // Articles by source - use raw SQL for better performance
+    const articlesBySourceRaw = await prisma.$queryRaw<Array<{ source: string; count: bigint }>>`
+      SELECT source, COUNT(*) as count
+      FROM "Article"
+      GROUP BY source
+      ORDER BY count DESC
+    `
 
     const articlesBySource = articlesBySourceRaw.map(item => ({
       name: item.source,
-      count: item._count.source,
+      count: Number(item.count),
       color: sourceMap.get(item.source)?.color || '#6B7280',
     }))
 
-    // Articles by country
-    const krSources = sources.filter(s => s.country === 'KR').map(s => s.name)
-    const usSources = sources.filter(s => s.country === 'US').map(s => s.name)
+    // Articles by country - calculate from articlesBySource
+    const krSources = new Set(sources.filter(s => s.country === 'KR').map(s => s.name))
+    let krCount = 0
+    let usCount = 0
 
-    const [krCount, usCount] = await Promise.all([
-      prisma.article.count({ where: { source: { in: krSources } } }),
-      prisma.article.count({ where: { source: { in: usSources } } }),
-    ])
+    articlesBySource.forEach(item => {
+      if (krSources.has(item.name)) {
+        krCount += item.count
+      } else {
+        usCount += item.count
+      }
+    })
 
     // Recent articles
     const recentArticles = await prisma.article.findMany({
