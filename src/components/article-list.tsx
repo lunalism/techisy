@@ -3,6 +3,8 @@
 import { useQuery } from '@tanstack/react-query'
 import { HeroSection } from './hero-section'
 import { ArticleCard } from './article-card'
+import { SkeletonHero } from './skeleton-hero'
+import { SkeletonCard } from './skeleton-card'
 import type { Article, TabValue } from '@/types'
 
 interface ArticleListProps {
@@ -42,30 +44,6 @@ function chunkArticles(articles: Article[]): Section[] {
   return sections
 }
 
-function HeroSkeleton() {
-  return (
-    <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 lg:gap-6 animate-pulse">
-      <div className="col-span-3 min-h-[400px] lg:min-h-[480px] bg-zinc-200 rounded-2xl" />
-      <div className="col-span-1 min-h-[400px] lg:min-h-[480px] bg-zinc-100 rounded-2xl" />
-    </div>
-  )
-}
-
-function ArticleSkeleton() {
-  return (
-    <div className="animate-pulse">
-      <div className="aspect-[16/10] bg-zinc-100 rounded-xl" />
-      <div className="pt-4">
-        <div className="h-3 w-16 bg-zinc-100 rounded" />
-        <div className="space-y-2 mt-2">
-          <div className="h-5 bg-zinc-100 rounded w-full" />
-          <div className="h-5 bg-zinc-100 rounded w-3/4" />
-        </div>
-        <div className="h-3 w-20 bg-zinc-50 rounded mt-3" />
-      </div>
-    </div>
-  )
-}
 
 export function ArticleList({ tab }: ArticleListProps) {
   const { data, isLoading, error } = useQuery({
@@ -77,10 +55,10 @@ export function ArticleList({ tab }: ArticleListProps) {
   if (isLoading) {
     return (
       <div className="space-y-16">
-        <HeroSkeleton />
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <SkeletonHero />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-10">
           {Array.from({ length: 8 }).map((_, i) => (
-            <ArticleSkeleton key={i} />
+            <SkeletonCard key={i} />
           ))}
         </div>
       </div>
