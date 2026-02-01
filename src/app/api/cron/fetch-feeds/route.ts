@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { fetchAllFeeds } from '@/lib/rss-fetcher'
 
+const SOURCES_PER_GROUP = 5
+
 export async function GET(request: NextRequest) {
   // Verify cron secret in production
   const authHeader = request.headers.get('authorization')
@@ -13,7 +15,19 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const results = await fetchAllFeeds()
+    // Parse group parameter (1-5 for pagination, undefined for all)
+    const groupParam = request.nextUrl.searchParams.get('group')
+    const group = groupParam ? parseInt(groupParam, 10) : undefined
+
+    let fetchOptions: { skip?: number; take?: number } | undefined
+    if (group && group >= 1 && group <= 5) {
+      fetchOptions = {
+        skip: (group - 1) * SOURCES_PER_GROUP,
+        take: SOURCES_PER_GROUP,
+      }
+    }
+
+    const results = await fetchAllFeeds(fetchOptions)
 
     const totalAdded = results.reduce((sum, r) => sum + r.added, 0)
     const totalUpdated = results.reduce((sum, r) => sum + r.updated, 0)
@@ -21,6 +35,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
+      group: group ?? 'all',
       summary: {
         sourcesProcessed: results.length,
         articlesAdded: totalAdded,

@@ -83,9 +83,15 @@ export async function fetchRssFeed(
   return result
 }
 
-export async function fetchAllFeeds(): Promise<FetchResult[]> {
+export async function fetchAllFeeds(options?: {
+  skip?: number
+  take?: number
+}): Promise<FetchResult[]> {
   const sources = await prisma.source.findMany({
     where: { active: true },
+    orderBy: { id: 'asc' },
+    skip: options?.skip,
+    take: options?.take,
   })
 
   const results: FetchResult[] = []

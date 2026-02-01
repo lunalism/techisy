@@ -9,22 +9,82 @@ jobs:
   fetch:
     runs-on: ubuntu-latest
     steps:
-      - name: Fetch RSS feeds
+      - name: Fetch RSS feeds - Group 1
+        continue-on-error: true
         run: |
           response=$(curl -s -w "\n%{http_code}" \
-            -X GET "https://techisy.vercel.app/api/cron/fetch-feeds" \
+            -X GET "https://techisy.vercel.app/api/cron/fetch-feeds?group=1" \
             -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}")
 
           http_code=$(echo "$response" | tail -n1)
           body=$(echo "$response" | sed '$d')
 
-          echo "Response: $body"
+          echo "Group 1 Response: $body"
           echo "HTTP Code: $http_code"
 
-          if [ "$http_code" -ne 200 ]; then
-            echo "Failed with status $http_code"
-            exit 1
-          fi
+      - name: Wait before Group 2
+        run: sleep 2
+
+      - name: Fetch RSS feeds - Group 2
+        continue-on-error: true
+        run: |
+          response=$(curl -s -w "\n%{http_code}" \
+            -X GET "https://techisy.vercel.app/api/cron/fetch-feeds?group=2" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}")
+
+          http_code=$(echo "$response" | tail -n1)
+          body=$(echo "$response" | sed '$d')
+
+          echo "Group 2 Response: $body"
+          echo "HTTP Code: $http_code"
+
+      - name: Wait before Group 3
+        run: sleep 2
+
+      - name: Fetch RSS feeds - Group 3
+        continue-on-error: true
+        run: |
+          response=$(curl -s -w "\n%{http_code}" \
+            -X GET "https://techisy.vercel.app/api/cron/fetch-feeds?group=3" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}")
+
+          http_code=$(echo "$response" | tail -n1)
+          body=$(echo "$response" | sed '$d')
+
+          echo "Group 3 Response: $body"
+          echo "HTTP Code: $http_code"
+
+      - name: Wait before Group 4
+        run: sleep 2
+
+      - name: Fetch RSS feeds - Group 4
+        continue-on-error: true
+        run: |
+          response=$(curl -s -w "\n%{http_code}" \
+            -X GET "https://techisy.vercel.app/api/cron/fetch-feeds?group=4" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}")
+
+          http_code=$(echo "$response" | tail -n1)
+          body=$(echo "$response" | sed '$d')
+
+          echo "Group 4 Response: $body"
+          echo "HTTP Code: $http_code"
+
+      - name: Wait before Group 5
+        run: sleep 2
+
+      - name: Fetch RSS feeds - Group 5
+        continue-on-error: true
+        run: |
+          response=$(curl -s -w "\n%{http_code}" \
+            -X GET "https://techisy.vercel.app/api/cron/fetch-feeds?group=5" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}")
+
+          http_code=$(echo "$response" | tail -n1)
+          body=$(echo "$response" | sed '$d')
+
+          echo "Group 5 Response: $body"
+          echo "HTTP Code: $http_code"
 
       - name: Cleanup old articles
         run: |
