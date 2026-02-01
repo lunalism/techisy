@@ -3,6 +3,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ThemeProvider } from 'next-themes'
 import { useState } from 'react'
+import { LayoutProvider } from '@/contexts/layout-context'
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(
@@ -25,7 +26,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
         enableSystem
         disableTransitionOnChange
       >
-        {children}
+        <LayoutProvider>
+          {children}
+        </LayoutProvider>
       </ThemeProvider>
     </QueryClientProvider>
   )

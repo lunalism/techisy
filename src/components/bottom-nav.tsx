@@ -4,12 +4,18 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useTheme } from 'next-themes'
-import { Home, Settings, User, Sun, Moon, Monitor, X } from 'lucide-react'
+import { Home, Settings, User, Sun, Moon, Monitor, X, LayoutGrid, Layers } from 'lucide-react'
+import { useLayout } from '@/contexts/layout-context'
 
 const themeOptions = [
   { value: 'light', label: '라이트', icon: Sun },
   { value: 'dark', label: '다크', icon: Moon },
   { value: 'system', label: '시스템', icon: Monitor },
+]
+
+const layoutOptions = [
+  { value: 'card', label: '카드형', icon: LayoutGrid },
+  { value: 'overlay', label: '오버레이', icon: Layers },
 ]
 
 interface AuthState {
@@ -20,6 +26,7 @@ interface AuthState {
 export function BottomNav() {
   const pathname = usePathname()
   const { theme, setTheme } = useTheme()
+  const { layout, setLayout } = useLayout()
   const [mounted, setMounted] = useState(false)
   const [showSettings, setShowSettings] = useState(false)
   const [auth, setAuth] = useState<AuthState | null>(null)
@@ -141,7 +148,37 @@ export function BottomNav() {
                         key={option.value}
                         onClick={() => {
                           setTheme(option.value)
-                          setShowSettings(false)
+                        }}
+                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
+                          isSelected
+                            ? 'bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-white'
+                            : 'text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800/50'
+                        }`}
+                      >
+                        <Icon className="w-5 h-5" />
+                        <span className="flex-1 text-left">{option.label}</span>
+                        {isSelected && (
+                          <div className="w-2 h-2 rounded-full bg-zinc-900 dark:bg-white" />
+                        )}
+                      </button>
+                    )
+                  })}
+                </div>
+              </div>
+
+              {/* Layout Options */}
+              <div className="mb-4">
+                <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-3">레이아웃</p>
+                <div className="space-y-1">
+                  {mounted && layoutOptions.map((option) => {
+                    const Icon = option.icon
+                    const isSelected = layout === option.value
+
+                    return (
+                      <button
+                        key={option.value}
+                        onClick={() => {
+                          setLayout(option.value as 'card' | 'overlay')
                         }}
                         className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
                           isSelected
