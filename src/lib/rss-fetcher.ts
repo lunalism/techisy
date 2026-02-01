@@ -1,6 +1,7 @@
 import Parser from 'rss-parser'
 import { prisma } from './prisma'
 import { scrapeOgImage } from './og-scraper'
+import { shouldIncludeArticle } from './article-filter'
 
 const parser = new Parser()
 
@@ -8,6 +9,7 @@ export interface FetchResult {
   source: string
   added: number
   updated: number
+  filtered: number
   errors: string[]
 }
 
@@ -19,6 +21,7 @@ export async function fetchRssFeed(
     source: sourceName,
     added: 0,
     updated: 0,
+    filtered: 0,
     errors: [],
   }
 
@@ -27,6 +30,12 @@ export async function fetchRssFeed(
 
     for (const item of feed.items) {
       if (!item.title || !item.link) continue
+
+      // Smart filter: skip non-tech articles
+      if (!shouldIncludeArticle(item.title)) {
+        result.filtered++
+        continue
+      }
 
       try {
         // Check if article exists
