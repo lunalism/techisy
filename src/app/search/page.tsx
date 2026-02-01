@@ -124,22 +124,20 @@ export default function SearchPage() {
                 href={article.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block w-full py-4 overflow-hidden hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors"
+                className="block py-4 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors"
               >
-                <div className="flex items-center justify-between mb-2">
-                  <span
-                    className="flex-shrink-0 px-2 py-0.5 text-[10px] font-medium text-white uppercase rounded"
-                    style={{ backgroundColor: article.sourceColor || '#6B7280' }}
-                  >
-                    {article.source}
-                  </span>
-                  <span className="text-xs text-zinc-400 dark:text-zinc-500 flex-shrink-0">
-                    {formatRelativeTime(article.publishedAt)}
-                  </span>
-                </div>
-                <h3 className="text-sm font-medium text-zinc-900 dark:text-white leading-relaxed line-clamp-2 break-words">
+                <span
+                  className="inline-block px-2 py-0.5 text-[10px] font-medium text-white uppercase rounded mb-2"
+                  style={{ backgroundColor: article.sourceColor || '#6B7280' }}
+                >
+                  {article.source}
+                </span>
+                <h3 className="text-sm font-medium text-zinc-900 dark:text-white leading-relaxed line-clamp-2 mb-1">
                   {article.title}
                 </h3>
+                <span className="text-xs text-zinc-400 dark:text-zinc-500">
+                  {formatRelativeTime(article.publishedAt)}
+                </span>
               </a>
             ))}
           </div>
