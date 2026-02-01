@@ -57,9 +57,9 @@ export default function AdminLayout({
   }
 
   return (
-    <div className="flex min-h-screen">
+    <div className="h-screen overflow-hidden">
       <AdminSidebar />
-      <main className="flex-1 bg-zinc-50">
+      <main className="ml-64 h-screen overflow-y-auto bg-zinc-50">
         {children}
       </main>
     </div>

@@ -14,7 +14,7 @@ export function AdminSidebar() {
   const pathname = usePathname()
 
   return (
-    <aside className="w-64 bg-zinc-900 min-h-screen flex flex-col">
+    <aside className="w-64 bg-zinc-900 h-screen flex flex-col fixed left-0 top-0">
       {/* Header */}
       <div className="p-6 border-b border-zinc-800">
         <Link href="/admin" className="text-xl font-bold text-white">
