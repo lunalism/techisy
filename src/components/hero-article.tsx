@@ -2,7 +2,7 @@ import Image from 'next/image'
 import { Clock } from 'lucide-react'
 import type { Article } from '@/types'
 
-interface ArticleCardProps {
+interface HeroArticleProps {
   article: Article
 }
 
@@ -21,7 +21,7 @@ function formatTimeAgo(date: Date | null): string {
   return '방금 전'
 }
 
-export function ArticleCard({ article }: ArticleCardProps) {
+export function HeroArticle({ article }: HeroArticleProps) {
   return (
     <a
       href={article.url}
@@ -29,36 +29,37 @@ export function ArticleCard({ article }: ArticleCardProps) {
       rel="noopener noreferrer"
       className="block group"
     >
-      <article className="h-full">
+      <article className="grid grid-cols-1 lg:grid-cols-2 gap-8 bg-zinc-100 rounded-2xl overflow-hidden">
         {/* Image */}
-        <div className="relative aspect-[16/10] overflow-hidden rounded-xl bg-zinc-100">
+        <div className="relative aspect-[16/10] lg:aspect-auto lg:min-h-[400px] overflow-hidden">
           {article.imageUrl ? (
             <Image
               src={article.imageUrl}
               alt={article.title}
               fill
               className="object-cover group-hover:scale-105 transition-transform duration-500"
-              sizes="(max-width: 768px) 100vw, 50vw"
+              sizes="(max-width: 1024px) 100vw, 50vw"
+              priority
               unoptimized
             />
           ) : (
-            <div className="w-full h-full bg-gradient-to-br from-zinc-200 to-zinc-300" />
+            <div className="w-full h-full bg-gradient-to-br from-zinc-300 to-zinc-400" />
           )}
         </div>
 
         {/* Content */}
-        <div className="pt-4">
-          <span className="text-xs font-medium text-zinc-500 uppercase tracking-wide">
+        <div className="flex flex-col justify-center p-8 lg:p-12 lg:pr-16">
+          <span className="inline-block px-3 py-1 text-xs font-medium text-zinc-600 bg-white rounded-full w-fit mb-4">
             {article.source}
           </span>
 
-          <h3 className="mt-2 text-xl font-bold text-zinc-900 leading-snug line-clamp-2 group-hover:text-zinc-600 transition-colors">
+          <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-zinc-900 leading-tight group-hover:text-zinc-700 transition-colors">
             {article.title}
-          </h3>
+          </h2>
 
           {article.publishedAt && (
-            <div className="flex items-center gap-1.5 mt-3 text-sm text-zinc-400">
-              <Clock className="w-3.5 h-3.5" />
+            <div className="flex items-center gap-1.5 mt-6 text-sm text-zinc-500">
+              <Clock className="w-4 h-4" />
               <span>{formatTimeAgo(article.publishedAt)}</span>
             </div>
           )}
