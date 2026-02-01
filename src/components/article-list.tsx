@@ -142,7 +142,7 @@ export function ArticleList({ tab }: ArticleListProps) {
       )}
 
       {/* Load More Trigger */}
-      <div ref={loadMoreRef} className="py-8 mb-4 lg:mb-0 flex justify-center">
+      <div ref={loadMoreRef} className="py-8 flex justify-center">
         {isFetchingNextPage ? (
           <div className="flex items-center gap-2 text-zinc-400">
             <Loader2 className="w-5 h-5 animate-spin" />
