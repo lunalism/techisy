@@ -110,14 +110,14 @@ export default function SearchPage() {
                 rel="noopener noreferrer"
                 className="block py-4 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors"
               >
-                <div className="flex items-start gap-3">
+                <div className="flex items-start gap-3 overflow-hidden">
                   <span
                     className="flex-shrink-0 px-2 py-0.5 text-[10px] font-medium text-white uppercase rounded mt-0.5"
                     style={{ backgroundColor: article.sourceColor || '#6B7280' }}
                   >
                     {article.source}
                   </span>
-                  <h3 className="text-sm font-medium text-zinc-900 dark:text-white leading-relaxed">
+                  <h3 className="flex-1 min-w-0 text-sm font-medium text-zinc-900 dark:text-white leading-relaxed line-clamp-2">
                     {article.title}
                   </h3>
                 </div>
