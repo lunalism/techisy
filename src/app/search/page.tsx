@@ -67,7 +67,7 @@ export default function SearchPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white dark:bg-zinc-950 w-screen max-w-[100vw] overflow-x-hidden">
+    <div className="min-h-screen bg-white dark:bg-zinc-950 w-full max-w-[100vw] overflow-x-hidden box-border">
       {/* Header */}
       <header className="sticky top-0 z-10 bg-white dark:bg-zinc-950 border-b border-zinc-100 dark:border-zinc-800 w-full">
         <div className="flex items-center gap-3 px-4 h-14 w-full min-w-0">
