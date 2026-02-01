@@ -39,18 +39,18 @@ export default function AdminLayout({
 
   if (authState === 'loading') {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-zinc-50">
-        <div className="text-zinc-500">인증 확인 중...</div>
+      <div className="min-h-screen flex items-center justify-center bg-zinc-50 dark:bg-zinc-950">
+        <div className="text-zinc-500 dark:text-zinc-400">인증 확인 중...</div>
       </div>
     )
   }
 
   if (authState === 'unauthorized') {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-zinc-50">
+      <div className="min-h-screen flex items-center justify-center bg-zinc-50 dark:bg-zinc-950">
         <div className="text-center">
-          <h1 className="text-xl font-bold text-zinc-900 mb-2">접근 권한 없음</h1>
-          <p className="text-zinc-500">관리자만 접근할 수 있습니다.</p>
+          <h1 className="text-xl font-bold text-zinc-900 dark:text-white mb-2">접근 권한 없음</h1>
+          <p className="text-zinc-500 dark:text-zinc-400">관리자만 접근할 수 있습니다.</p>
         </div>
       </div>
     )
@@ -59,7 +59,7 @@ export default function AdminLayout({
   return (
     <div className="h-screen overflow-hidden">
       <AdminSidebar />
-      <main className="ml-64 h-screen overflow-y-auto bg-zinc-50">
+      <main className="ml-64 h-screen overflow-y-auto bg-zinc-50 dark:bg-zinc-950">
         {children}
       </main>
     </div>

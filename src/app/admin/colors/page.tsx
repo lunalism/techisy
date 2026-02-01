@@ -40,15 +40,15 @@ function ColorEditor({ source, onSave }: { source: Source; onSave: (color: strin
   }
 
   return (
-    <div className="flex items-center gap-4 p-4 bg-white rounded-lg border border-zinc-200">
+    <div className="flex items-center gap-4 p-4 bg-white dark:bg-zinc-900 rounded-lg border border-zinc-200 dark:border-zinc-800">
       <div
         className="w-10 h-10 rounded-lg shadow-inner flex-shrink-0"
         style={{ backgroundColor: color }}
       />
 
       <div className="flex-1 min-w-0">
-        <div className="font-medium text-zinc-900">{source.name}</div>
-        <div className="text-sm text-zinc-500">{source.country}</div>
+        <div className="font-medium text-zinc-900 dark:text-white">{source.name}</div>
+        <div className="text-sm text-zinc-500 dark:text-zinc-400">{source.country}</div>
       </div>
 
       {isEditing ? (
@@ -77,7 +77,7 @@ function ColorEditor({ source, onSave }: { source: Source; onSave: (color: strin
         </div>
       ) : (
         <div className="flex items-center gap-2">
-          <span className="font-mono text-sm text-zinc-600">{source.color}</span>
+          <span className="font-mono text-sm text-zinc-600 dark:text-zinc-400">{source.color}</span>
           <Button size="sm" variant="outline" onClick={() => setIsEditing(true)}>
             수정
           </Button>
@@ -108,15 +108,15 @@ export default function ColorsPage() {
 
   return (
     <div className="p-8">
-      <h1 className="text-2xl font-bold text-zinc-900 mb-2">색상 관리</h1>
-      <p className="text-zinc-500 mb-8">각 소스의 브랜드 색상을 설정합니다.</p>
+      <h1 className="text-2xl font-bold text-zinc-900 dark:text-white mb-2">색상 관리</h1>
+      <p className="text-zinc-500 dark:text-zinc-400 mb-8">각 소스의 브랜드 색상을 설정합니다.</p>
 
       {isLoading ? (
-        <div className="text-zinc-500">로딩 중...</div>
+        <div className="text-zinc-500 dark:text-zinc-400">로딩 중...</div>
       ) : (
         <div className="space-y-8">
           <section>
-            <h2 className="text-lg font-semibold text-zinc-900 mb-4">
+            <h2 className="text-lg font-semibold text-zinc-900 dark:text-white mb-4">
               한국 매체 ({krSources.length})
             </h2>
             <div className="space-y-2">
@@ -131,7 +131,7 @@ export default function ColorsPage() {
           </section>
 
           <section>
-            <h2 className="text-lg font-semibold text-zinc-900 mb-4">
+            <h2 className="text-lg font-semibold text-zinc-900 dark:text-white mb-4">
               해외 매체 ({usSources.length})
             </h2>
             <div className="space-y-2">

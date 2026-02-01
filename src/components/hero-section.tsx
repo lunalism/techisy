@@ -45,7 +45,7 @@ function MainArticle({ article }: { article: Article }) {
             unoptimized
           />
         ) : (
-          <div className="absolute inset-0 bg-gradient-to-br from-zinc-300 to-zinc-400" />
+          <div className="absolute inset-0 bg-gradient-to-br from-zinc-300 to-zinc-400 dark:from-zinc-700 dark:to-zinc-800" />
         )}
 
         {/* Overlay */}
@@ -97,7 +97,7 @@ function SideArticle({ article }: { article: Article }) {
             unoptimized
           />
         ) : (
-          <div className="absolute inset-0 bg-gradient-to-br from-zinc-200 to-zinc-300" />
+          <div className="absolute inset-0 bg-gradient-to-br from-zinc-200 to-zinc-300 dark:from-zinc-700 dark:to-zinc-800" />
         )}
 
         {/* Overlay */}

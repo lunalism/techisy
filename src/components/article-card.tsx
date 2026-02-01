@@ -33,7 +33,7 @@ export function ArticleCard({ article }: ArticleCardProps) {
     >
       <article className="h-full">
         {/* Image */}
-        <div className="relative aspect-[16/10] overflow-hidden rounded-xl bg-zinc-100">
+        <div className="relative aspect-[16/10] overflow-hidden rounded-xl bg-zinc-100 dark:bg-zinc-800">
           {article.imageUrl ? (
             <Image
               src={article.imageUrl}
@@ -44,7 +44,7 @@ export function ArticleCard({ article }: ArticleCardProps) {
               unoptimized
             />
           ) : (
-            <div className="w-full h-full bg-gradient-to-br from-zinc-200 to-zinc-300" />
+            <div className="w-full h-full bg-gradient-to-br from-zinc-200 to-zinc-300 dark:from-zinc-700 dark:to-zinc-800" />
           )}
         </div>
 
@@ -57,7 +57,7 @@ export function ArticleCard({ article }: ArticleCardProps) {
             {article.source}
           </span>
 
-          <h3 className="mt-2 text-xl font-bold text-zinc-900 leading-snug line-clamp-2 group-hover:text-zinc-600 transition-colors">
+          <h3 className="mt-2 text-xl font-bold text-zinc-900 dark:text-white leading-snug line-clamp-2 group-hover:text-zinc-600 dark:group-hover:text-zinc-300 transition-colors">
             {article.title}
           </h3>
 

@@ -189,7 +189,7 @@ export default function SourcesPage() {
   return (
     <div className="p-8">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-zinc-900">소스 관리</h1>
+        <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">소스 관리</h1>
         <div className="flex items-center gap-2">
           <Button
             variant="outline"
@@ -206,14 +206,14 @@ export default function SourcesPage() {
       </div>
 
       {fetchStatus && (
-        <div className="mb-4 p-3 bg-zinc-100 rounded-md text-sm">
+        <div className="mb-4 p-3 bg-zinc-100 dark:bg-zinc-800 rounded-md text-sm text-zinc-900 dark:text-zinc-100">
           {fetchStatus}
         </div>
       )}
 
-      <div className="bg-white rounded-xl border border-zinc-200 overflow-hidden">
+      <div className="bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 overflow-hidden">
         {isLoading ? (
-          <div className="text-center py-8 text-zinc-500">로딩 중...</div>
+          <div className="text-center py-8 text-zinc-500 dark:text-zinc-400">로딩 중...</div>
         ) : (
           <Table>
             <TableHeader>

@@ -63,7 +63,7 @@ export default function AdminDashboard() {
 
   return (
     <div className="p-8">
-      <h1 className="text-2xl font-bold text-zinc-900 mb-8">대시보드</h1>
+      <h1 className="text-2xl font-bold text-zinc-900 dark:text-white mb-8">대시보드</h1>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -76,42 +76,42 @@ export default function AdminDashboard() {
           </>
         ) : (
           <>
-            <div className="bg-white rounded-xl p-6 shadow-sm border border-zinc-200">
+            <div className="bg-white dark:bg-zinc-900 rounded-xl p-6 shadow-sm border border-zinc-200 dark:border-zinc-800">
               <div className="flex items-center gap-4">
-                <div className="p-3 bg-blue-100 rounded-lg">
-                  <Newspaper className="w-6 h-6 text-blue-600" />
+                <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+                  <Newspaper className="w-6 h-6 text-blue-600 dark:text-blue-400" />
                 </div>
                 <div>
-                  <p className="text-sm text-zinc-500">총 기사</p>
-                  <p className="text-3xl font-bold text-zinc-900">
+                  <p className="text-sm text-zinc-500 dark:text-zinc-400">총 기사</p>
+                  <p className="text-3xl font-bold text-zinc-900 dark:text-white">
                     {stats?.totalArticles.toLocaleString()}
                   </p>
                 </div>
               </div>
             </div>
 
-            <div className="bg-white rounded-xl p-6 shadow-sm border border-zinc-200">
+            <div className="bg-white dark:bg-zinc-900 rounded-xl p-6 shadow-sm border border-zinc-200 dark:border-zinc-800">
               <div className="flex items-center gap-4">
-                <div className="p-3 bg-green-100 rounded-lg">
-                  <Calendar className="w-6 h-6 text-green-600" />
+                <div className="p-3 bg-green-100 dark:bg-green-900/30 rounded-lg">
+                  <Calendar className="w-6 h-6 text-green-600 dark:text-green-400" />
                 </div>
                 <div>
-                  <p className="text-sm text-zinc-500">오늘 수집</p>
-                  <p className="text-3xl font-bold text-zinc-900">
+                  <p className="text-sm text-zinc-500 dark:text-zinc-400">오늘 수집</p>
+                  <p className="text-3xl font-bold text-zinc-900 dark:text-white">
                     {stats?.todayArticles.toLocaleString()}
                   </p>
                 </div>
               </div>
             </div>
 
-            <div className="bg-white rounded-xl p-6 shadow-sm border border-zinc-200">
+            <div className="bg-white dark:bg-zinc-900 rounded-xl p-6 shadow-sm border border-zinc-200 dark:border-zinc-800">
               <div className="flex items-center gap-4">
-                <div className="p-3 bg-purple-100 rounded-lg">
-                  <Rss className="w-6 h-6 text-purple-600" />
+                <div className="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
+                  <Rss className="w-6 h-6 text-purple-600 dark:text-purple-400" />
                 </div>
                 <div>
-                  <p className="text-sm text-zinc-500">활성 소스</p>
-                  <p className="text-3xl font-bold text-zinc-900">
+                  <p className="text-sm text-zinc-500 dark:text-zinc-400">활성 소스</p>
+                  <p className="text-3xl font-bold text-zinc-900 dark:text-white">
                     {stats?.activeSources}
                     <span className="text-sm font-normal text-zinc-400 ml-1">
                       / {stats?.totalSources}
@@ -121,17 +121,17 @@ export default function AdminDashboard() {
               </div>
             </div>
 
-            <div className="bg-white rounded-xl p-6 shadow-sm border border-zinc-200">
+            <div className="bg-white dark:bg-zinc-900 rounded-xl p-6 shadow-sm border border-zinc-200 dark:border-zinc-800">
               <div className="flex items-center gap-4">
-                <div className="p-3 bg-orange-100 rounded-lg">
-                  <Globe className="w-6 h-6 text-orange-600" />
+                <div className="p-3 bg-orange-100 dark:bg-orange-900/30 rounded-lg">
+                  <Globe className="w-6 h-6 text-orange-600 dark:text-orange-400" />
                 </div>
                 <div>
-                  <p className="text-sm text-zinc-500">국가별 비율</p>
-                  <p className="text-lg font-bold text-zinc-900">
-                    <span className="text-blue-600">KR</span> {stats?.articlesByCountry.KR.toLocaleString()}
-                    <span className="text-zinc-300 mx-2">|</span>
-                    <span className="text-zinc-600">US</span> {stats?.articlesByCountry.US.toLocaleString()}
+                  <p className="text-sm text-zinc-500 dark:text-zinc-400">국가별 비율</p>
+                  <p className="text-lg font-bold text-zinc-900 dark:text-white">
+                    <span className="text-blue-600 dark:text-blue-400">KR</span> {stats?.articlesByCountry.KR.toLocaleString()}
+                    <span className="text-zinc-300 dark:text-zinc-600 mx-2">|</span>
+                    <span className="text-zinc-600 dark:text-zinc-400">US</span> {stats?.articlesByCountry.US.toLocaleString()}
                   </p>
                 </div>
               </div>
@@ -143,8 +143,8 @@ export default function AdminDashboard() {
       {/* Content Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Articles by Source */}
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-zinc-200">
-          <h2 className="text-lg font-semibold text-zinc-900 mb-4">소스별 기사 수</h2>
+        <div className="bg-white dark:bg-zinc-900 rounded-xl p-6 shadow-sm border border-zinc-200 dark:border-zinc-800">
+          <h2 className="text-lg font-semibold text-zinc-900 dark:text-white mb-4">소스별 기사 수</h2>
           <div className="space-y-3">
             {isLoading ? (
               Array.from({ length: 10 }).map((_, i) => (
@@ -157,8 +157,8 @@ export default function AdminDashboard() {
                     className="w-3 h-3 rounded-full flex-shrink-0"
                     style={{ backgroundColor: source.color }}
                   />
-                  <span className="text-sm text-zinc-700 w-28 truncate">{source.name}</span>
-                  <div className="flex-1 h-6 bg-zinc-100 rounded-full overflow-hidden">
+                  <span className="text-sm text-zinc-700 dark:text-zinc-300 w-28 truncate">{source.name}</span>
+                  <div className="flex-1 h-6 bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
                     <div
                       className="h-full rounded-full transition-all duration-500"
                       style={{
@@ -167,7 +167,7 @@ export default function AdminDashboard() {
                       }}
                     />
                   </div>
-                  <span className="text-sm font-medium text-zinc-900 w-12 text-right">
+                  <span className="text-sm font-medium text-zinc-900 dark:text-white w-12 text-right">
                     {source.count.toLocaleString()}
                   </span>
                 </div>
@@ -177,8 +177,8 @@ export default function AdminDashboard() {
         </div>
 
         {/* Recent Articles */}
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-zinc-200">
-          <h2 className="text-lg font-semibold text-zinc-900 mb-4">최근 수집 기사</h2>
+        <div className="bg-white dark:bg-zinc-900 rounded-xl p-6 shadow-sm border border-zinc-200 dark:border-zinc-800">
+          <h2 className="text-lg font-semibold text-zinc-900 dark:text-white mb-4">최근 수집 기사</h2>
           <div className="space-y-4">
             {isLoading ? (
               Array.from({ length: 5 }).map((_, i) => (
@@ -192,7 +192,7 @@ export default function AdminDashboard() {
                     style={{ backgroundColor: article.color }}
                   />
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-zinc-900 line-clamp-2">
+                    <p className="text-sm font-medium text-zinc-900 dark:text-white line-clamp-2">
                       {article.title}
                     </p>
                     <div className="flex items-center gap-2 mt-1">
