@@ -15,10 +15,29 @@ interface ArticlesResponse {
   hasMore: boolean
 }
 
+interface Section {
+  hero: Article
+  cards: Article[]
+}
+
 async function fetchArticles(tab: TabValue): Promise<ArticlesResponse> {
   const res = await fetch(`/api/articles?tab=${tab}&limit=50`)
   if (!res.ok) throw new Error('Failed to fetch articles')
   return res.json()
+}
+
+function chunkArticles(articles: Article[]): Section[] {
+  const sections: Section[] = []
+  let index = 0
+
+  while (index < articles.length) {
+    const hero = articles[index]
+    const cards = articles.slice(index + 1, index + 10)
+    sections.push({ hero, cards })
+    index += 10
+  }
+
+  return sections
 }
 
 function HeroSkeleton() {
@@ -64,8 +83,8 @@ export function ArticleList({ tab }: ArticleListProps) {
     return (
       <div className="space-y-16">
         <HeroSkeleton />
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {Array.from({ length: 4 }).map((_, i) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {Array.from({ length: 6 }).map((_, i) => (
             <ArticleSkeleton key={i} />
           ))}
         </div>
@@ -92,21 +111,25 @@ export function ArticleList({ tab }: ArticleListProps) {
     )
   }
 
-  const [heroArticle, ...restArticles] = data.articles
+  const sections = chunkArticles(data.articles)
 
   return (
     <div className="space-y-16">
-      {/* Hero Article */}
-      {heroArticle && <HeroArticle article={heroArticle} />}
+      {sections.map((section, sectionIndex) => (
+        <div key={sectionIndex} className="space-y-12">
+          {/* Hero Article */}
+          <HeroArticle article={section.hero} />
 
-      {/* Article Grid */}
-      {restArticles.length > 0 && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-12">
-          {restArticles.map((article) => (
-            <ArticleCard key={article.id} article={article} />
-          ))}
+          {/* 3-Column Grid */}
+          {section.cards.length > 0 && (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-10">
+              {section.cards.map((article) => (
+                <ArticleCard key={article.id} article={article} />
+              ))}
+            </div>
+          )}
         </div>
-      )}
+      ))}
     </div>
   )
 }
