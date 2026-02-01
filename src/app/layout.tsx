@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
+import Script from 'next/script'
 import './globals.css'
 import { Providers } from '@/components/providers'
 
@@ -29,6 +30,11 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 overflow-x-hidden max-w-[100vw]`}
       >
         <Providers>{children}</Providers>
+        {/* Eruda for mobile debugging - REMOVE AFTER DEBUGGING */}
+        <Script src="https://cdn.jsdelivr.net/npm/eruda" strategy="afterInteractive" />
+        <Script id="eruda-init" strategy="afterInteractive">
+          {`if (typeof eruda !== 'undefined') eruda.init();`}
+        </Script>
       </body>
     </html>
   )
