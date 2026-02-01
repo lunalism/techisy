@@ -31,39 +31,40 @@ export function ArticleCard({ article }: ArticleCardProps) {
       rel="noopener noreferrer"
       className="block group"
     >
-      <article className="h-full">
+      <article className="relative aspect-[4/3] overflow-hidden rounded-xl bg-zinc-100 dark:bg-zinc-800">
         {/* Image */}
-        <div className="relative aspect-[16/10] overflow-hidden rounded-xl bg-zinc-100 dark:bg-zinc-800">
-          {article.imageUrl ? (
-            <Image
-              src={article.imageUrl}
-              alt={article.title}
-              fill
-              className="object-cover group-hover:scale-105 transition-transform duration-500"
-              sizes="(max-width: 768px) 100vw, 50vw"
-              unoptimized
-            />
-          ) : (
-            <div className="w-full h-full bg-gradient-to-br from-zinc-200 to-zinc-300 dark:from-zinc-700 dark:to-zinc-800" />
-          )}
-        </div>
+        {article.imageUrl ? (
+          <Image
+            src={article.imageUrl}
+            alt={article.title}
+            fill
+            className="object-cover group-hover:scale-105 transition-transform duration-500"
+            sizes="(max-width: 768px) 100vw, 50vw"
+            unoptimized
+          />
+        ) : (
+          <div className="absolute inset-0 bg-gradient-to-br from-zinc-200 to-zinc-300 dark:from-zinc-700 dark:to-zinc-800" />
+        )}
+
+        {/* Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
         {/* Content */}
-        <div className="pt-4">
+        <div className="absolute bottom-0 left-0 right-0 p-4">
           <span
-            className="inline-block px-2 py-1 text-xs font-medium text-white uppercase tracking-wide rounded"
+            className="inline-block px-2 py-1 text-[10px] font-medium text-white uppercase tracking-wide rounded"
             style={{ backgroundColor: sourceColor }}
           >
             {article.source}
           </span>
 
-          <h3 className="mt-2 text-xl font-bold text-zinc-900 dark:text-white leading-snug line-clamp-2 group-hover:text-zinc-600 dark:group-hover:text-zinc-300 transition-colors">
+          <h3 className="mt-2 text-base font-bold text-white leading-snug line-clamp-2 group-hover:text-white/90 transition-colors">
             {article.title}
           </h3>
 
           {article.publishedAt && (
-            <div className="flex items-center gap-1.5 mt-3 text-sm text-zinc-400">
-              <Clock className="w-3.5 h-3.5" />
+            <div className="flex items-center gap-1.5 mt-2 text-xs text-white/70">
+              <Clock className="w-3 h-3" />
               <span>{formatTimeAgo(article.publishedAt)}</span>
             </div>
           )}

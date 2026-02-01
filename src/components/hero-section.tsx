@@ -33,51 +33,14 @@ function MainArticle({ article }: { article: Article }) {
       rel="noopener noreferrer"
       className="block group lg:col-span-3"
     >
-      {/* Mobile: Image above text */}
-      <article className="lg:hidden">
-        <div className="relative aspect-[16/10] overflow-hidden rounded-xl bg-zinc-100 dark:bg-zinc-800">
-          {article.imageUrl ? (
-            <Image
-              src={article.imageUrl}
-              alt={article.title}
-              fill
-              className="object-cover group-hover:scale-105 transition-transform duration-500"
-              sizes="100vw"
-              priority
-              unoptimized
-            />
-          ) : (
-            <div className="w-full h-full bg-gradient-to-br from-zinc-300 to-zinc-400 dark:from-zinc-700 dark:to-zinc-800" />
-          )}
-        </div>
-        <div className="pt-4">
-          <span
-            className="inline-block px-2 py-1 text-xs font-medium text-white uppercase tracking-wide rounded"
-            style={{ backgroundColor: sourceColor }}
-          >
-            {article.source}
-          </span>
-          <h2 className="mt-2 text-xl font-bold text-zinc-900 dark:text-white leading-snug line-clamp-3 group-hover:text-zinc-600 dark:group-hover:text-zinc-300 transition-colors">
-            {article.title}
-          </h2>
-          {article.publishedAt && (
-            <div className="flex items-center gap-1.5 mt-3 text-sm text-zinc-400">
-              <Clock className="w-3.5 h-3.5" />
-              <span>{formatTimeAgo(article.publishedAt)}</span>
-            </div>
-          )}
-        </div>
-      </article>
-
-      {/* Desktop: Overlay style */}
-      <article className="hidden lg:block relative h-full min-h-[480px] rounded-2xl overflow-hidden">
+      <article className="relative aspect-[4/3] lg:aspect-auto lg:h-full lg:min-h-[480px] rounded-2xl overflow-hidden">
         {article.imageUrl ? (
           <Image
             src={article.imageUrl}
             alt={article.title}
             fill
             className="object-cover group-hover:scale-105 transition-transform duration-500"
-            sizes="75vw"
+            sizes="(max-width: 1024px) 100vw, 75vw"
             priority
             unoptimized
           />
@@ -89,21 +52,21 @@ function MainArticle({ article }: { article: Article }) {
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
         {/* Content */}
-        <div className="absolute bottom-0 left-0 right-0 p-10">
+        <div className="absolute bottom-0 left-0 right-0 p-5 lg:p-10">
           <span
-            className="inline-block px-3 py-1 text-xs font-medium text-white uppercase tracking-wide rounded"
+            className="inline-block px-2 lg:px-3 py-1 text-[10px] lg:text-xs font-medium text-white uppercase tracking-wide rounded"
             style={{ backgroundColor: sourceColor }}
           >
             {article.source}
           </span>
 
-          <h2 className="mt-4 text-3xl lg:text-4xl font-bold text-white leading-tight group-hover:text-white/90 transition-colors">
+          <h2 className="mt-3 lg:mt-4 text-xl lg:text-4xl font-bold text-white leading-snug lg:leading-tight line-clamp-3 group-hover:text-white/90 transition-colors">
             {article.title}
           </h2>
 
           {article.publishedAt && (
-            <div className="flex items-center gap-1.5 mt-4 text-sm text-white/70">
-              <Clock className="w-4 h-4" />
+            <div className="flex items-center gap-1.5 mt-3 lg:mt-4 text-xs lg:text-sm text-white/70">
+              <Clock className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
               <span>{formatTimeAgo(article.publishedAt)}</span>
             </div>
           )}
@@ -123,50 +86,14 @@ function SideArticle({ article }: { article: Article }) {
       rel="noopener noreferrer"
       className="block group lg:col-span-1"
     >
-      {/* Mobile: Image above text */}
-      <article className="lg:hidden">
-        <div className="relative aspect-[16/10] overflow-hidden rounded-xl bg-zinc-100 dark:bg-zinc-800">
-          {article.imageUrl ? (
-            <Image
-              src={article.imageUrl}
-              alt={article.title}
-              fill
-              className="object-cover group-hover:scale-105 transition-transform duration-500"
-              sizes="100vw"
-              unoptimized
-            />
-          ) : (
-            <div className="w-full h-full bg-gradient-to-br from-zinc-200 to-zinc-300 dark:from-zinc-700 dark:to-zinc-800" />
-          )}
-        </div>
-        <div className="pt-4">
-          <span
-            className="inline-block px-2 py-1 text-xs font-medium text-white uppercase tracking-wide rounded"
-            style={{ backgroundColor: sourceColor }}
-          >
-            {article.source}
-          </span>
-          <h3 className="mt-2 text-lg font-bold text-zinc-900 dark:text-white leading-snug line-clamp-2 group-hover:text-zinc-600 dark:group-hover:text-zinc-300 transition-colors">
-            {article.title}
-          </h3>
-          {article.publishedAt && (
-            <div className="flex items-center gap-1.5 mt-3 text-sm text-zinc-400">
-              <Clock className="w-3.5 h-3.5" />
-              <span>{formatTimeAgo(article.publishedAt)}</span>
-            </div>
-          )}
-        </div>
-      </article>
-
-      {/* Desktop: Overlay style */}
-      <article className="hidden lg:block relative h-full min-h-[480px] rounded-2xl overflow-hidden">
+      <article className="relative aspect-[4/3] lg:aspect-auto lg:h-full lg:min-h-[480px] rounded-2xl overflow-hidden">
         {article.imageUrl ? (
           <Image
             src={article.imageUrl}
             alt={article.title}
             fill
             className="object-cover group-hover:scale-105 transition-transform duration-500"
-            sizes="25vw"
+            sizes="(max-width: 1024px) 100vw, 25vw"
             unoptimized
           />
         ) : (
@@ -177,21 +104,21 @@ function SideArticle({ article }: { article: Article }) {
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
 
         {/* Content */}
-        <div className="absolute bottom-0 left-0 right-0 p-6">
+        <div className="absolute bottom-0 left-0 right-0 p-5 lg:p-6">
           <span
-            className="inline-block px-2.5 py-1 text-[11px] font-medium text-white uppercase tracking-wide rounded"
+            className="inline-block px-2 lg:px-2.5 py-1 text-[10px] lg:text-[11px] font-medium text-white uppercase tracking-wide rounded"
             style={{ backgroundColor: sourceColor }}
           >
             {article.source}
           </span>
 
-          <h3 className="mt-3 text-lg font-bold text-white leading-snug line-clamp-3 group-hover:text-white/90 transition-colors">
+          <h3 className="mt-2 lg:mt-3 text-base lg:text-lg font-bold text-white leading-snug line-clamp-2 lg:line-clamp-3 group-hover:text-white/90 transition-colors">
             {article.title}
           </h3>
 
           {article.publishedAt && (
-            <div className="flex items-center gap-1.5 mt-3 text-xs text-white/70">
-              <Clock className="w-3.5 h-3.5" />
+            <div className="flex items-center gap-1.5 mt-2 lg:mt-3 text-xs text-white/70">
+              <Clock className="w-3 h-3 lg:w-3.5 lg:h-3.5" />
               <span>{formatTimeAgo(article.publishedAt)}</span>
             </div>
           )}
@@ -203,7 +130,7 @@ function SideArticle({ article }: { article: Article }) {
 
 export function HeroSection({ mainArticle, sideArticle, reverse = false }: HeroSectionProps) {
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 lg:gap-6">
+    <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 lg:gap-6">
       {reverse ? (
         <>
           {sideArticle && <SideArticle article={sideArticle} />}
