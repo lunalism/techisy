@@ -70,7 +70,8 @@ export function Header({ tab, onTabChange }: HeaderProps) {
               ))}
             </nav>
 
-            <div className="flex items-center gap-2 pl-4 border-l border-zinc-100 dark:border-zinc-800">
+            {/* Desktop only - settings and auth */}
+            <div className="hidden lg:flex items-center gap-2 pl-4 border-l border-zinc-100 dark:border-zinc-800">
               <SettingsDropdown />
 
               {auth?.isAdmin && (
