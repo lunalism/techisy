@@ -4,7 +4,9 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
+import { Search, X } from 'lucide-react'
 import { SettingsDropdown } from './settings-dropdown'
+import { SearchBar } from './search-bar'
 import type { TabValue } from '@/types'
 
 interface HeaderProps {
@@ -26,6 +28,7 @@ const tabs: { value: TabValue; label: string }[] = [
 export function Header({ tab, onTabChange }: HeaderProps) {
   const router = useRouter()
   const [auth, setAuth] = useState<AuthState | null>(null)
+  const [showSearch, setShowSearch] = useState(false)
 
   useEffect(() => {
     async function fetchAuth() {
@@ -44,7 +47,7 @@ export function Header({ tab, onTabChange }: HeaderProps) {
   }
 
   return (
-    <header className="bg-white dark:bg-zinc-900 sticky top-0 z-10 border-b border-zinc-100 dark:border-zinc-800">
+    <header className="bg-white dark:bg-zinc-900 sticky top-0 z-20 border-b border-zinc-100 dark:border-zinc-800">
       <div className="mx-auto max-w-[1600px] px-4 md:px-8 lg:px-12">
         <div className="flex items-center justify-between h-16">
           <Link href="/" className="inline-block">
@@ -70,8 +73,17 @@ export function Header({ tab, onTabChange }: HeaderProps) {
               ))}
             </nav>
 
-            {/* Desktop only - settings and auth */}
+            {/* Desktop only - search, settings and auth */}
             <div className="hidden lg:flex items-center gap-2 pl-4 border-l border-zinc-100 dark:border-zinc-800">
+              {/* Search Button */}
+              <button
+                onClick={() => setShowSearch(!showSearch)}
+                className="p-2 rounded-lg text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+                title="검색"
+              >
+                <Search className="w-4 h-4" />
+              </button>
+
               <SettingsDropdown />
 
               {auth?.isAdmin && (
@@ -102,6 +114,17 @@ export function Header({ tab, onTabChange }: HeaderProps) {
           </div>
         </div>
       </div>
+
+      {/* Desktop Search Dropdown */}
+      {showSearch && (
+        <div className="hidden lg:block border-t border-zinc-100 dark:border-zinc-800">
+          <div className="mx-auto max-w-[1600px] px-4 md:px-8 lg:px-12 py-4">
+            <div className="max-w-xl mx-auto relative">
+              <SearchBar onClose={() => setShowSearch(false)} />
+            </div>
+          </div>
+        </div>
+      )}
     </header>
   )
 }
