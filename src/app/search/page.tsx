@@ -12,6 +12,22 @@ interface SearchResult {
   query: string
 }
 
+function formatRelativeTime(date: Date | string | null): string {
+  if (!date) return ''
+  const now = new Date()
+  const then = new Date(date)
+  const diffMs = now.getTime() - then.getTime()
+  const diffMins = Math.floor(diffMs / 60000)
+  const diffHours = Math.floor(diffMs / 3600000)
+  const diffDays = Math.floor(diffMs / 86400000)
+
+  if (diffMins < 1) return '방금'
+  if (diffMins < 60) return `${diffMins}분 전`
+  if (diffHours < 24) return `${diffHours}시간 전`
+  if (diffDays < 7) return `${diffDays}일 전`
+  return then.toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' })
+}
+
 async function searchArticles(query: string): Promise<SearchResult> {
   if (!query || query.length < 2) {
     return { articles: [], count: 0, query }
@@ -110,17 +126,20 @@ export default function SearchPage() {
                 rel="noopener noreferrer"
                 className="block py-4 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors"
               >
-                <div className="flex items-start gap-3 overflow-hidden">
+                <div className="flex items-center justify-between mb-2">
                   <span
-                    className="flex-shrink-0 px-2 py-0.5 text-[10px] font-medium text-white uppercase rounded mt-0.5"
+                    className="px-2 py-0.5 text-[10px] font-medium text-white uppercase rounded"
                     style={{ backgroundColor: article.sourceColor || '#6B7280' }}
                   >
                     {article.source}
                   </span>
-                  <h3 className="flex-1 min-w-0 text-sm font-medium text-zinc-900 dark:text-white leading-relaxed line-clamp-2">
-                    {article.title}
-                  </h3>
+                  <span className="text-xs text-zinc-400 dark:text-zinc-500">
+                    {formatRelativeTime(article.publishedAt)}
+                  </span>
                 </div>
+                <h3 className="text-sm font-medium text-zinc-900 dark:text-white leading-relaxed line-clamp-2">
+                  {article.title}
+                </h3>
               </a>
             ))}
           </div>
