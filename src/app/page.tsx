@@ -10,7 +10,7 @@ export default function Home() {
   const [tab, setTab] = useState<TabValue>('all')
 
   return (
-    <div className="min-h-screen bg-white dark:bg-zinc-950 pb-16 lg:pb-0">
+    <div className="min-h-screen bg-white dark:bg-zinc-950">
       <Header tab={tab} onTabChange={setTab} />
 
       <main className="mx-auto max-w-[1600px] px-4 md:px-8 lg:px-12 py-12">
@@ -22,7 +22,7 @@ export default function Home() {
         </section>
       </main>
 
-      <footer className="border-t border-zinc-100 dark:border-zinc-800 mt-16">
+      <footer className="border-t border-zinc-100 dark:border-zinc-800 mt-16 mb-20 lg:mb-0">
         <div className="mx-auto max-w-[1600px] px-4 md:px-8 lg:px-12 py-8">
           <p className="text-sm text-zinc-400 text-center">
             Techisy - Tech News Aggregator
