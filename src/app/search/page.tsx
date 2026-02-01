@@ -67,18 +67,18 @@ export default function SearchPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white dark:bg-zinc-950 w-full max-w-full overflow-x-hidden">
+    <div className="min-h-screen bg-white dark:bg-zinc-950 w-screen max-w-[100vw] overflow-x-hidden">
       {/* Header */}
-      <header className="sticky top-0 z-10 bg-white dark:bg-zinc-950 border-b border-zinc-100 dark:border-zinc-800">
-        <div className="flex items-center gap-3 px-4 h-14">
+      <header className="sticky top-0 z-10 bg-white dark:bg-zinc-950 border-b border-zinc-100 dark:border-zinc-800 w-full">
+        <div className="flex items-center gap-3 px-4 h-14 w-full min-w-0">
           <Link
             href="/"
-            className="p-2 -ml-2 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white"
+            className="flex-shrink-0 p-2 -ml-2 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white"
           >
             <ArrowLeft className="w-5 h-5" />
           </Link>
 
-          <div className="flex-1 relative">
+          <div className="flex-1 min-w-0 relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
             <input
               ref={inputRef}
@@ -101,7 +101,7 @@ export default function SearchPage() {
       </header>
 
       {/* Content */}
-      <main className="pb-nav">
+      <main className="pb-nav w-full min-w-0">
         {query.length < 2 ? (
           <div className="flex flex-col items-center justify-center py-20 text-zinc-400">
             <Search className="w-12 h-12 mb-4 opacity-50" />
