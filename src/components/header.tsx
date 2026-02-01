@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import { ThemeToggle } from './theme-toggle'
+import { SettingsDropdown } from './settings-dropdown'
 import type { TabValue } from '@/types'
 
 interface HeaderProps {
@@ -71,7 +71,7 @@ export function Header({ tab, onTabChange }: HeaderProps) {
             </nav>
 
             <div className="flex items-center gap-2 pl-4 border-l border-zinc-100 dark:border-zinc-800">
-              <ThemeToggle />
+              <SettingsDropdown />
 
               {auth?.isAdmin && (
                 <Link
