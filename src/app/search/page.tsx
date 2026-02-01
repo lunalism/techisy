@@ -75,7 +75,7 @@ export default function SearchPage() {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="기사 검색..."
-              className="w-full pl-10 pr-10 py-2 bg-zinc-100 dark:bg-zinc-800 rounded-full text-sm"
+              className="w-full pl-10 pr-10 py-2 bg-zinc-100 dark:bg-zinc-800 rounded-full text-base"
             />
             {query && (
               <button
