@@ -1,7 +1,7 @@
 'use client'
 
 import { useQuery } from '@tanstack/react-query'
-import { HeroArticle } from './hero-article'
+import { HeroSection } from './hero-section'
 import { ArticleCard } from './article-card'
 import type { Article, TabValue } from '@/types'
 
@@ -16,7 +16,8 @@ interface ArticlesResponse {
 }
 
 interface Section {
-  hero: Article
+  mainArticle: Article
+  sideArticle?: Article
   cards: Article[]
 }
 
@@ -31,9 +32,10 @@ function chunkArticles(articles: Article[]): Section[] {
   let index = 0
 
   while (index < articles.length) {
-    const hero = articles[index]
-    const cards = articles.slice(index + 1, index + 10)
-    sections.push({ hero, cards })
+    const mainArticle = articles[index]
+    const sideArticle = articles[index + 1]
+    const cards = articles.slice(index + 2, index + 10)
+    sections.push({ mainArticle, sideArticle, cards })
     index += 10
   }
 
@@ -42,16 +44,9 @@ function chunkArticles(articles: Article[]): Section[] {
 
 function HeroSkeleton() {
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 bg-zinc-100 rounded-2xl overflow-hidden animate-pulse">
-      <div className="aspect-[16/10] lg:aspect-auto lg:min-h-[400px] bg-zinc-200" />
-      <div className="flex flex-col justify-center p-8 lg:p-12">
-        <div className="h-6 w-24 bg-zinc-200 rounded-full mb-4" />
-        <div className="space-y-3">
-          <div className="h-8 bg-zinc-200 rounded w-full" />
-          <div className="h-8 bg-zinc-200 rounded w-4/5" />
-        </div>
-        <div className="h-4 w-20 bg-zinc-200 rounded mt-6" />
-      </div>
+    <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 lg:gap-6 animate-pulse">
+      <div className="col-span-3 min-h-[400px] lg:min-h-[480px] bg-zinc-200 rounded-2xl" />
+      <div className="col-span-1 min-h-[400px] lg:min-h-[480px] bg-zinc-100 rounded-2xl" />
     </div>
   )
 }
@@ -83,8 +78,8 @@ export function ArticleList({ tab }: ArticleListProps) {
     return (
       <div className="space-y-16">
         <HeroSkeleton />
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {Array.from({ length: 6 }).map((_, i) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {Array.from({ length: 8 }).map((_, i) => (
             <ArticleSkeleton key={i} />
           ))}
         </div>
@@ -116,13 +111,17 @@ export function ArticleList({ tab }: ArticleListProps) {
   return (
     <div className="space-y-16">
       {sections.map((section, sectionIndex) => (
-        <div key={sectionIndex} className="space-y-12">
-          {/* Hero Article */}
-          <HeroArticle article={section.hero} />
+        <div key={sectionIndex} className="space-y-10">
+          {/* Hero Section with alternating layout */}
+          <HeroSection
+            mainArticle={section.mainArticle}
+            sideArticle={section.sideArticle}
+            reverse={sectionIndex % 2 === 1}
+          />
 
-          {/* 3-Column Grid */}
+          {/* 4-Column Grid */}
           {section.cards.length > 0 && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-10">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-10">
               {section.cards.map((article) => (
                 <ArticleCard key={article.id} article={article} />
               ))}
