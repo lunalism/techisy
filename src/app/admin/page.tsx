@@ -1,7 +1,8 @@
 'use client'
 
-import { useQuery } from '@tanstack/react-query'
-import { Newspaper, Calendar, Rss, Globe, Clock } from 'lucide-react'
+import { useState } from 'react'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { Newspaper, Calendar, Rss, Globe, Clock, Trash2, RefreshCw, Loader2 } from 'lucide-react'
 import {
   SkeletonStatsCard,
   SkeletonSourceBar,
@@ -53,6 +54,10 @@ function formatTimeAgo(dateStr: string): string {
 }
 
 export default function AdminDashboard() {
+  const queryClient = useQueryClient()
+  const [isDeleting, setIsDeleting] = useState(false)
+  const [isFetching, setIsFetching] = useState(false)
+
   const { data: stats, isLoading } = useQuery({
     queryKey: ['admin-stats'],
     queryFn: fetchStats,
@@ -61,9 +66,77 @@ export default function AdminDashboard() {
 
   const maxArticleCount = stats?.articlesBySource[0]?.count || 1
 
+  const handleCleanupAll = async () => {
+    if (!confirm('정말 모든 기사를 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.')) {
+      return
+    }
+
+    setIsDeleting(true)
+    try {
+      const res = await fetch('/api/admin/cleanup?deleteAll=true', { method: 'POST' })
+      const data = await res.json()
+      if (res.ok) {
+        alert(`${data.deleted}개 기사가 삭제되었습니다.`)
+        queryClient.invalidateQueries({ queryKey: ['admin-stats'] })
+      } else {
+        alert(`오류: ${data.error}`)
+      }
+    } catch {
+      alert('삭제 중 오류가 발생했습니다.')
+    } finally {
+      setIsDeleting(false)
+    }
+  }
+
+  const handleFetchAll = async () => {
+    setIsFetching(true)
+    try {
+      const res = await fetch('/api/cron/fetch-feeds')
+      const data = await res.json()
+      if (res.ok) {
+        alert(`수집 완료!\n추가: ${data.summary.articlesAdded}개\n업데이트: ${data.summary.imagesUpdated}개`)
+        queryClient.invalidateQueries({ queryKey: ['admin-stats'] })
+      } else {
+        alert(`오류: ${data.error}`)
+      }
+    } catch {
+      alert('수집 중 오류가 발생했습니다.')
+    } finally {
+      setIsFetching(false)
+    }
+  }
+
   return (
     <div className="p-8">
-      <h1 className="text-2xl font-bold text-zinc-900 dark:text-white mb-8">대시보드</h1>
+      <div className="flex items-center justify-between mb-8">
+        <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">대시보드</h1>
+        <div className="flex gap-3">
+          <button
+            onClick={handleFetchAll}
+            disabled={isFetching}
+            className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white rounded-lg transition-colors"
+          >
+            {isFetching ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              <RefreshCw className="w-4 h-4" />
+            )}
+            {isFetching ? '수집 중...' : 'Fetch Now'}
+          </button>
+          <button
+            onClick={handleCleanupAll}
+            disabled={isDeleting}
+            className="flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 disabled:bg-red-400 text-white rounded-lg transition-colors"
+          >
+            {isDeleting ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              <Trash2 className="w-4 h-4" />
+            )}
+            {isDeleting ? '삭제 중...' : 'Cleanup All'}
+          </button>
+        </div>
+      </div>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
