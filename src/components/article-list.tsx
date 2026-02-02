@@ -58,19 +58,26 @@ function splitIntoSections(articles: Article[]): Section[] {
 
   while (index < articles.length) {
     const heroMain = articles[index]
+    if (!heroMain) break // Safety check
+
     const heroSide = articles[index + 1]
     const gridStart = index + HERO_ARTICLES
     const gridEnd = Math.min(gridStart + GRID_ARTICLES, articles.length)
-    const gridArticles = articles.slice(gridStart, gridEnd)
+    const gridArticles = gridStart < articles.length
+      ? articles.slice(gridStart, gridEnd)
+      : []
 
     sections.push({
       heroMain,
       heroSide,
       gridArticles,
-      reverse: sectionIndex % 2 === 1, // Alternate hero direction
+      reverse: sectionIndex % 2 === 1,
     })
 
-    index = gridEnd
+    // Ensure progress to avoid infinite loop
+    const nextIndex = Math.max(gridEnd, index + 1)
+    if (nextIndex <= index) break
+    index = nextIndex
     sectionIndex++
   }
 
@@ -183,25 +190,28 @@ export function ArticleList({ tab }: ArticleListProps) {
 
   return (
     <div className="space-y-12">
-      {sections.map((section, idx) => (
-        <div key={idx} className="space-y-12">
-          {/* Hero Section */}
-          <HeroSection
-            mainArticle={section.heroMain}
-            sideArticle={section.heroSide}
-            reverse={section.reverse}
-          />
+      {sections.map((section, idx) => {
+        if (!section.heroMain) return null
+        return (
+          <div key={idx} className="space-y-12">
+            {/* Hero Section */}
+            <HeroSection
+              mainArticle={section.heroMain}
+              sideArticle={section.heroSide}
+              reverse={section.reverse}
+            />
 
-          {/* Grid of articles (4 columns x 4 rows) */}
-          {section.gridArticles.length > 0 && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-8">
-              {section.gridArticles.map((article) => (
-                <ArticleCard key={article.id} article={article} />
-              ))}
-            </div>
-          )}
-        </div>
-      ))}
+            {/* Grid of articles (4 columns x 4 rows) */}
+            {section.gridArticles.length > 0 && (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-8">
+                {section.gridArticles.map((article) => (
+                  <ArticleCard key={article.id} article={article} />
+                ))}
+              </div>
+            )}
+          </div>
+        )
+      })}
 
       {/* Load More Trigger */}
       <div ref={loadMoreRef} className="py-8 flex justify-center">
