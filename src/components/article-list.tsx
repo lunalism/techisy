@@ -37,6 +37,72 @@ function deduplicateArticles(articles: Article[]): Article[] {
   })
 }
 
+// Interleave articles to ensure source diversity
+// Prevents same source from appearing more than maxConsecutive times in a row
+function interleaveBySource(articles: Article[], maxConsecutive: number = 2): Article[] {
+  if (articles.length === 0) return []
+
+  // Group by source while preserving publishedAt order within each source
+  const bySource = new Map<string, Article[]>()
+  articles.forEach((article) => {
+    const source = article.source || 'unknown'
+    if (!bySource.has(source)) bySource.set(source, [])
+    bySource.get(source)!.push(article)
+  })
+
+  const result: Article[] = []
+  const sourceQueues = Array.from(bySource.entries())
+  const sourceIndices = new Map<string, number>()
+  sourceQueues.forEach(([source]) => sourceIndices.set(source, 0))
+
+  let lastSource: string | null = null
+  let consecutiveCount = 0
+
+  while (result.length < articles.length) {
+    let added = false
+
+    // Try each source in round-robin fashion
+    for (const [source, queue] of sourceQueues) {
+      const idx = sourceIndices.get(source)!
+      if (idx >= queue.length) continue
+
+      // Skip if this source has reached consecutive limit
+      if (source === lastSource && consecutiveCount >= maxConsecutive) {
+        continue
+      }
+
+      result.push(queue[idx])
+      sourceIndices.set(source, idx + 1)
+
+      if (source === lastSource) {
+        consecutiveCount++
+      } else {
+        lastSource = source
+        consecutiveCount = 1
+      }
+
+      added = true
+      break
+    }
+
+    // If all sources hit consecutive limit, force add from any available source
+    if (!added) {
+      for (const [source, queue] of sourceQueues) {
+        const idx = sourceIndices.get(source)!
+        if (idx < queue.length) {
+          result.push(queue[idx])
+          sourceIndices.set(source, idx + 1)
+          lastSource = source
+          consecutiveCount = 1
+          break
+        }
+      }
+    }
+  }
+
+  return result
+}
+
 // Split articles into sections (hero 2 + grid 16 = 18 per section)
 interface Section {
   heroMain: Article
@@ -122,11 +188,12 @@ export function ArticleList({ tab }: ArticleListProps) {
     [fetchNextPage, hasNextPage, isFetchingNextPage]
   )
 
-  // Flatten all articles from all pages and deduplicate
+  // Flatten all articles from all pages, deduplicate, and interleave
   // NOTE: All hooks must be called before any early returns
   const allArticles = useMemo(() => {
     const articles = data?.pages.flatMap((page) => page.articles) ?? []
-    return deduplicateArticles(articles)
+    const unique = deduplicateArticles(articles)
+    return interleaveBySource(unique, 2) // Max 2 consecutive from same source
   }, [data])
 
   // Split into sections for repeating hero pattern
