@@ -23,22 +23,16 @@ const ARTICLES_PER_PAGE = 20
 const HERO_ARTICLES = 2
 const GRID_ARTICLES = 16 // 4 columns x 4 rows
 
-// Remove duplicate articles by URL and title
+// Remove duplicate articles by URL only
+// Note: Title-based dedup was too aggressive and filtered out
+// articles from different sources covering the same news
 function deduplicateArticles(articles: Article[]): Article[] {
   const seenUrls = new Set<string>()
-  const seenTitles = new Set<string>()
   return articles.filter((article) => {
-    // Check URL duplicate
     if (seenUrls.has(article.url)) {
       return false
     }
-    // Check title duplicate (normalize: lowercase, trim)
-    const normalizedTitle = article.title.toLowerCase().trim()
-    if (seenTitles.has(normalizedTitle)) {
-      return false
-    }
     seenUrls.add(article.url)
-    seenTitles.add(normalizedTitle)
     return true
   })
 }
