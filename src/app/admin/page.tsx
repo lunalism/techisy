@@ -53,7 +53,7 @@ function formatTimeAgo(dateStr: string): string {
   return '방금 전'
 }
 
-const TOTAL_GROUPS = 5
+const TOTAL_GROUPS = 10
 
 interface FetchProgress {
   currentGroup: number

@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { fetchAllFeeds } from '@/lib/rss-fetcher'
 import { createClient } from '@/lib/supabase/server'
 
-const SOURCES_PER_GROUP = 5
+const SOURCES_PER_GROUP = 3
+const MAX_GROUPS = 10
 
 export async function GET(request: NextRequest) {
   // Check authentication: CRON_SECRET or Admin session
@@ -33,7 +34,7 @@ export async function GET(request: NextRequest) {
     const group = groupParam ? parseInt(groupParam, 10) : undefined
 
     let fetchOptions: { skip?: number; take?: number } | undefined
-    if (group && group >= 1 && group <= 5) {
+    if (group && group >= 1 && group <= MAX_GROUPS) {
       fetchOptions = {
         skip: (group - 1) * SOURCES_PER_GROUP,
         take: SOURCES_PER_GROUP,
