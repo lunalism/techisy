@@ -5,6 +5,23 @@ import { shouldIncludeArticle } from './article-filter'
 
 const parser = new Parser()
 
+// Parse publish date with fallbacks
+function parsePublishDate(item: Parser.Item): Date {
+  // Try isoDate first (already parsed by rss-parser)
+  if (item.isoDate) {
+    return new Date(item.isoDate)
+  }
+  // Try pubDate string
+  if (item.pubDate) {
+    const parsed = new Date(item.pubDate)
+    if (!isNaN(parsed.getTime())) {
+      return parsed
+    }
+  }
+  // Fallback to current time
+  return new Date()
+}
+
 export interface FetchResult {
   source: string
   added: number
@@ -65,7 +82,7 @@ export async function fetchRssFeed(
               source: sourceName,
               sourceUrl: rssUrl,
               imageUrl,
-              publishedAt: item.isoDate ? new Date(item.isoDate) : new Date(),
+              publishedAt: parsePublishDate(item),
             },
           })
           result.added++
