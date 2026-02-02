@@ -13,9 +13,13 @@ export async function GET(request: NextRequest) {
     // Check admin session if not valid cron
     let isAdmin = false
     if (!isValidCron) {
-      const supabase = await createClient()
-      const { data: { user } } = await supabase.auth.getUser()
-      isAdmin = user?.email === 'chris@techisy.io'
+      try {
+        const supabase = await createClient()
+        const { data: { user } } = await supabase.auth.getUser()
+        isAdmin = user?.email === 'chris@techisy.io'
+      } catch (e) {
+        console.error('Auth check failed:', e)
+      }
     }
 
     if (!isValidCron && !isAdmin) {
