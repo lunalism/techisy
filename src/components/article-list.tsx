@@ -128,6 +128,16 @@ export function ArticleList({ tab }: ArticleListProps) {
     [fetchNextPage, hasNextPage, isFetchingNextPage]
   )
 
+  // Flatten all articles from all pages and deduplicate
+  // NOTE: All hooks must be called before any early returns
+  const allArticles = useMemo(() => {
+    const articles = data?.pages.flatMap((page) => page.articles) ?? []
+    return deduplicateArticles(articles)
+  }, [data])
+
+  // Split into sections for repeating hero pattern
+  const sections = useMemo(() => splitIntoSections(allArticles), [allArticles])
+
   useEffect(() => {
     const element = loadMoreRef.current
     if (!element) return
@@ -147,6 +157,7 @@ export function ArticleList({ tab }: ArticleListProps) {
     }
   }, [handleObserver])
 
+  // Early returns after all hooks
   if (isLoading) {
     return (
       <div className="space-y-16">
@@ -167,15 +178,6 @@ export function ArticleList({ tab }: ArticleListProps) {
       </div>
     )
   }
-
-  // Flatten all articles from all pages and deduplicate
-  const allArticles = useMemo(() => {
-    const articles = data?.pages.flatMap((page) => page.articles) ?? []
-    return deduplicateArticles(articles)
-  }, [data])
-
-  // Split into sections for repeating hero pattern
-  const sections = useMemo(() => splitIntoSections(allArticles), [allArticles])
 
   if (!allArticles.length) {
     return (
