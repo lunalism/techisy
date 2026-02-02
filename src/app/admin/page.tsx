@@ -53,10 +53,19 @@ function formatTimeAgo(dateStr: string): string {
   return '방금 전'
 }
 
+const TOTAL_GROUPS = 5
+
+interface FetchProgress {
+  currentGroup: number
+  totalGroups: number
+  articlesAdded: number
+  sourcesProcessed: number
+}
+
 export default function AdminDashboard() {
   const queryClient = useQueryClient()
   const [isDeleting, setIsDeleting] = useState(false)
-  const [isFetching, setIsFetching] = useState(false)
+  const [fetchProgress, setFetchProgress] = useState<FetchProgress | null>(null)
 
   const { data: stats, isLoading } = useQuery({
     queryKey: ['admin-stats'],
@@ -89,21 +98,40 @@ export default function AdminDashboard() {
   }
 
   const handleFetchAll = async () => {
-    setIsFetching(true)
-    try {
-      const res = await fetch('/api/cron/fetch-feeds')
-      const data = await res.json()
-      if (res.ok) {
-        alert(`수집 완료!\n추가: ${data.summary.articlesAdded}개\n업데이트: ${data.summary.imagesUpdated}개`)
-        queryClient.invalidateQueries({ queryKey: ['admin-stats'] })
-      } else {
-        alert(`오류: ${data.error}`)
+    setFetchProgress({
+      currentGroup: 0,
+      totalGroups: TOTAL_GROUPS,
+      articlesAdded: 0,
+      sourcesProcessed: 0,
+    })
+
+    let totalAdded = 0
+    let totalSources = 0
+
+    for (let group = 1; group <= TOTAL_GROUPS; group++) {
+      try {
+        setFetchProgress((prev) => prev && ({ ...prev, currentGroup: group }))
+
+        const res = await fetch(`/api/cron/fetch-feeds?group=${group}`)
+        const data = await res.json()
+
+        if (res.ok && data.summary) {
+          totalAdded += data.summary.articlesAdded || 0
+          totalSources += data.summary.sourcesProcessed || 0
+          setFetchProgress((prev) => prev && ({
+            ...prev,
+            articlesAdded: totalAdded,
+            sourcesProcessed: totalSources,
+          }))
+        }
+      } catch (e) {
+        console.error(`Group ${group} failed:`, e)
       }
-    } catch {
-      alert('수집 중 오류가 발생했습니다.')
-    } finally {
-      setIsFetching(false)
     }
+
+    setFetchProgress(null)
+    queryClient.invalidateQueries({ queryKey: ['admin-stats'] })
+    alert(`수집 완료!\n소스: ${totalSources}개\n기사: ${totalAdded}개`)
   }
 
   return (
@@ -113,15 +141,22 @@ export default function AdminDashboard() {
         <div className="flex gap-3">
           <button
             onClick={handleFetchAll}
-            disabled={isFetching}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white rounded-lg transition-colors"
+            disabled={fetchProgress !== null}
+            className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white rounded-lg transition-colors min-w-[180px]"
           >
-            {isFetching ? (
-              <Loader2 className="w-4 h-4 animate-spin" />
+            {fetchProgress ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                <span>
+                  {fetchProgress.currentGroup}/{fetchProgress.totalGroups} · {fetchProgress.articlesAdded}개
+                </span>
+              </>
             ) : (
-              <RefreshCw className="w-4 h-4" />
+              <>
+                <RefreshCw className="w-4 h-4" />
+                <span>Fetch Now</span>
+              </>
             )}
-            {isFetching ? '수집 중...' : 'Fetch Now'}
           </button>
           <button
             onClick={handleCleanupAll}
