@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { fetchAllFeeds } from '@/lib/rss-fetcher'
+import { fetchAllFeeds, getActiveSourceCount } from '@/lib/rss-fetcher'
 import { createClient } from '@/lib/supabase/server'
 
-const SOURCES_PER_GROUP = 3
-const MAX_GROUPS = 10
+export const SOURCES_PER_GROUP = 3
 
 export async function GET(request: NextRequest) {
   // Check authentication: CRON_SECRET or Admin session
@@ -29,12 +28,41 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    // Parse group parameter (1-5 for pagination, undefined for all)
+    // Get total source count for dynamic group calculation
+    const totalSources = await getActiveSourceCount()
+    const totalGroups = Math.ceil(totalSources / SOURCES_PER_GROUP)
+
+    // Parse and validate group parameter
     const groupParam = request.nextUrl.searchParams.get('group')
     const group = groupParam ? parseInt(groupParam, 10) : undefined
 
+    // Validate group parameter
+    if (group !== undefined) {
+      if (isNaN(group) || group < 1) {
+        return NextResponse.json(
+          { error: 'Invalid group parameter. Must be a positive integer.' },
+          { status: 400 }
+        )
+      }
+      if (group > totalGroups) {
+        // Return empty result for out-of-range groups (graceful handling)
+        return NextResponse.json({
+          success: true,
+          group,
+          groupInfo: { totalSources, totalGroups, sourcesPerGroup: SOURCES_PER_GROUP },
+          summary: {
+            sourcesProcessed: 0,
+            articlesAdded: 0,
+            imagesUpdated: 0,
+            errors: 0,
+          },
+          details: [],
+        })
+      }
+    }
+
     let fetchOptions: { skip?: number; take?: number } | undefined
-    if (group && group >= 1 && group <= MAX_GROUPS) {
+    if (group && group >= 1 && group <= totalGroups) {
       fetchOptions = {
         skip: (group - 1) * SOURCES_PER_GROUP,
         take: SOURCES_PER_GROUP,
@@ -50,6 +78,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
       success: true,
       group: group ?? 'all',
+      groupInfo: { totalSources, totalGroups, sourcesPerGroup: SOURCES_PER_GROUP },
       summary: {
         sourcesProcessed: results.length,
         articlesAdded: totalAdded,

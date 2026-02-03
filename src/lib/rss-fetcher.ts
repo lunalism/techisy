@@ -5,6 +5,11 @@ import { shouldIncludeArticle } from './article-filter'
 
 const parser = new Parser()
 
+// Get count of active sources for dynamic group calculation
+export async function getActiveSourceCount(): Promise<number> {
+  return prisma.source.count({ where: { active: true } })
+}
+
 // Parse publish date with fallbacks
 function parsePublishDate(item: Parser.Item): Date {
   // Try isoDate first (already parsed by rss-parser)
