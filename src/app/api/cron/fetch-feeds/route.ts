@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { fetchAllFeeds, getActiveSourceCount } from '@/lib/rss-fetcher'
 import { createClient } from '@/lib/supabase/server'
 
-export const SOURCES_PER_GROUP = 3
+export const SOURCES_PER_GROUP = 2
 
 // Shared authentication logic
 async function checkAuth(request: NextRequest): Promise<{

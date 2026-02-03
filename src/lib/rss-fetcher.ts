@@ -3,7 +3,14 @@ import { prisma } from './prisma'
 import { scrapeOgImage } from './og-scraper'
 import { shouldIncludeArticle } from './article-filter'
 
-const parser = new Parser()
+const RSS_TIMEOUT_MS = 5000
+
+const parser = new Parser({
+  timeout: RSS_TIMEOUT_MS,
+  headers: {
+    'User-Agent': 'Mozilla/5.0 (compatible; Techisy/1.0)',
+  },
+})
 
 // Get count of active sources for dynamic group calculation
 export async function getActiveSourceCount(): Promise<number> {
@@ -35,6 +42,16 @@ export interface FetchResult {
   errors: string[]
 }
 
+// Helper to add timeout to any promise
+function withTimeout<T>(promise: Promise<T>, ms: number, errorMsg: string): Promise<T> {
+  return Promise.race([
+    promise,
+    new Promise<T>((_, reject) =>
+      setTimeout(() => reject(new Error(errorMsg)), ms)
+    ),
+  ])
+}
+
 export async function fetchRssFeed(
   rssUrl: string,
   sourceName: string
@@ -48,7 +65,11 @@ export async function fetchRssFeed(
   }
 
   try {
-    const feed = await parser.parseURL(rssUrl)
+    const feed = await withTimeout(
+      parser.parseURL(rssUrl),
+      RSS_TIMEOUT_MS,
+      `Timeout after ${RSS_TIMEOUT_MS / 1000}s`
+    )
 
     for (const item of feed.items) {
       if (!item.title || !item.link) continue
