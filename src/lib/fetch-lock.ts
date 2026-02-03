@@ -16,11 +16,14 @@ export async function acquireLock(holder: LockHolder): Promise<{ acquired: boole
   const now = new Date()
   const expiresAt = new Date(now.getTime() + LOCK_TTL_MINUTES * 60 * 1000)
 
+  console.log(`[FetchLock] Attempting to acquire lock for ${holder}`)
+
   try {
     // Check existing lock
     const existing = await prisma.fetchLock.findUnique({
       where: { id: LOCK_ID },
     })
+    console.log(`[FetchLock] Existing lock:`, existing ? `by ${existing.lockedBy}, expires ${existing.expiresAt}` : 'none')
 
     if (existing) {
       // Check if lock is expired (stale)
@@ -57,6 +60,7 @@ export async function acquireLock(holder: LockHolder): Promise<{ acquired: boole
       })
     }
 
+    console.log(`[FetchLock] Lock acquired by ${holder}, expires at ${expiresAt}`)
     return {
       acquired: true,
       status: {
@@ -67,6 +71,7 @@ export async function acquireLock(holder: LockHolder): Promise<{ acquired: boole
       },
     }
   } catch (error) {
+    console.error(`[FetchLock] Error acquiring lock:`, error)
     // If FetchLock table doesn't exist or other DB error, allow fetch to proceed
     // This ensures fetch works even before the table is created
     const errorMessage = error instanceof Error ? error.message : String(error)
