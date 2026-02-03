@@ -53,13 +53,12 @@ function formatTimeAgo(dateStr: string): string {
   return '방금 전'
 }
 
-const TOTAL_GROUPS = 10
-
 interface FetchProgress {
   currentGroup: number
   totalGroups: number
   articlesAdded: number
   sourcesProcessed: number
+  errors: string[]
 }
 
 export default function AdminDashboard() {
@@ -98,17 +97,31 @@ export default function AdminDashboard() {
   }
 
   const handleFetchAll = async () => {
+    // Get dynamic group count first
+    let totalGroups = 10 // fallback
+    try {
+      const infoRes = await fetch('/api/admin/sources/info')
+      if (infoRes.ok) {
+        const info = await infoRes.json()
+        totalGroups = info.totalGroups || 10
+      }
+    } catch {
+      console.error('Failed to get source info, using default groups')
+    }
+
     setFetchProgress({
       currentGroup: 0,
-      totalGroups: TOTAL_GROUPS,
+      totalGroups,
       articlesAdded: 0,
       sourcesProcessed: 0,
+      errors: [],
     })
 
     let totalAdded = 0
     let totalSources = 0
+    const errors: string[] = []
 
-    for (let group = 1; group <= TOTAL_GROUPS; group++) {
+    for (let group = 1; group <= totalGroups; group++) {
       try {
         setFetchProgress((prev) => prev && ({ ...prev, currentGroup: group }))
 
@@ -118,20 +131,40 @@ export default function AdminDashboard() {
         if (res.ok && data.summary) {
           totalAdded += data.summary.articlesAdded || 0
           totalSources += data.summary.sourcesProcessed || 0
+          if (data.summary.errors > 0) {
+            errors.push(`그룹 ${group}: ${data.summary.errors}개 에러`)
+          }
           setFetchProgress((prev) => prev && ({
             ...prev,
             articlesAdded: totalAdded,
             sourcesProcessed: totalSources,
+            errors: [...errors],
+          }))
+        } else {
+          errors.push(`그룹 ${group}: ${data.error || 'API 에러'}`)
+          setFetchProgress((prev) => prev && ({
+            ...prev,
+            errors: [...errors],
           }))
         }
       } catch (e) {
-        console.error(`Group ${group} failed:`, e)
+        const errorMsg = e instanceof Error ? e.message : '네트워크 에러'
+        errors.push(`그룹 ${group}: ${errorMsg}`)
+        setFetchProgress((prev) => prev && ({
+          ...prev,
+          errors: [...errors],
+        }))
       }
     }
 
     setFetchProgress(null)
     queryClient.invalidateQueries({ queryKey: ['admin-stats'] })
-    alert(`수집 완료!\n소스: ${totalSources}개\n기사: ${totalAdded}개`)
+
+    if (errors.length > 0) {
+      alert(`수집 완료 (일부 에러)\n소스: ${totalSources}개\n기사: ${totalAdded}개\n\n에러:\n${errors.join('\n')}`)
+    } else {
+      alert(`수집 완료!\n소스: ${totalSources}개\n기사: ${totalAdded}개`)
+    }
   }
 
   return (
