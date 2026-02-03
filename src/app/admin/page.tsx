@@ -97,7 +97,27 @@ export default function AdminDashboard() {
   }
 
   const handleFetchAll = async () => {
-    // Get dynamic group count first
+    // Step 1: Acquire lock first
+    try {
+      const lockRes = await fetch('/api/cron/fetch-feeds/lock', { method: 'POST' })
+      const lockData = await lockRes.json()
+
+      if (lockRes.status === 409) {
+        alert(lockData.message || '다른 프로세스에서 이미 수집 중입니다.')
+        return
+      }
+
+      if (!lockRes.ok) {
+        alert('락 획득 실패: ' + (lockData.error || '알 수 없는 오류'))
+        return
+      }
+    } catch (e) {
+      console.error('Lock acquisition failed:', e)
+      alert('락 획득 중 오류가 발생했습니다.')
+      return
+    }
+
+    // Step 2: Get dynamic group count
     let totalGroups = 10 // fallback
     try {
       const infoRes = await fetch('/api/admin/sources/info')
@@ -121,46 +141,49 @@ export default function AdminDashboard() {
     let totalSources = 0
     const errors: string[] = []
 
-    for (let group = 1; group <= totalGroups; group++) {
-      try {
-        setFetchProgress((prev) => prev && ({ ...prev, currentGroup: group }))
+    // Step 3: Fetch all groups
+    try {
+      for (let group = 1; group <= totalGroups; group++) {
+        try {
+          setFetchProgress((prev) => prev && ({ ...prev, currentGroup: group }))
 
-        const res = await fetch(`/api/cron/fetch-feeds?group=${group}`, { method: 'POST' })
-        const data = await res.json()
+          const res = await fetch(`/api/cron/fetch-feeds?group=${group}`, { method: 'POST' })
+          const data = await res.json()
 
-        // Handle "already fetching" (409 Conflict)
-        if (res.status === 409) {
-          setFetchProgress(null)
-          alert(data.message || '다른 프로세스에서 이미 수집 중입니다.')
-          return
-        }
-
-        if (res.ok && data.summary) {
-          totalAdded += data.summary.articlesAdded || 0
-          totalSources += data.summary.sourcesProcessed || 0
-          if (data.summary.errors > 0) {
-            errors.push(`그룹 ${group}: ${data.summary.errors}개 에러`)
+          if (res.ok && data.summary) {
+            totalAdded += data.summary.articlesAdded || 0
+            totalSources += data.summary.sourcesProcessed || 0
+            if (data.summary.errors > 0) {
+              errors.push(`그룹 ${group}: ${data.summary.errors}개 에러`)
+            }
+            setFetchProgress((prev) => prev && ({
+              ...prev,
+              articlesAdded: totalAdded,
+              sourcesProcessed: totalSources,
+              errors: [...errors],
+            }))
+          } else {
+            errors.push(`그룹 ${group}: ${data.error || 'API 에러'}`)
+            setFetchProgress((prev) => prev && ({
+              ...prev,
+              errors: [...errors],
+            }))
           }
-          setFetchProgress((prev) => prev && ({
-            ...prev,
-            articlesAdded: totalAdded,
-            sourcesProcessed: totalSources,
-            errors: [...errors],
-          }))
-        } else {
-          errors.push(`그룹 ${group}: ${data.error || 'API 에러'}`)
+        } catch (e) {
+          const errorMsg = e instanceof Error ? e.message : '네트워크 에러'
+          errors.push(`그룹 ${group}: ${errorMsg}`)
           setFetchProgress((prev) => prev && ({
             ...prev,
             errors: [...errors],
           }))
         }
+      }
+    } finally {
+      // Step 4: Always release lock when done (success or error)
+      try {
+        await fetch('/api/cron/fetch-feeds/lock', { method: 'DELETE' })
       } catch (e) {
-        const errorMsg = e instanceof Error ? e.message : '네트워크 에러'
-        errors.push(`그룹 ${group}: ${errorMsg}`)
-        setFetchProgress((prev) => prev && ({
-          ...prev,
-          errors: [...errors],
-        }))
+        console.error('Failed to release lock:', e)
       }
     }
 

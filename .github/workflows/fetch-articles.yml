@@ -6,19 +6,50 @@ on:
   workflow_dispatch:  # Manual trigger
 
 jobs:
+  acquire-lock:
+    runs-on: ubuntu-latest
+    outputs:
+      lock_acquired: ${{ steps.lock.outputs.acquired }}
+    steps:
+      - name: Acquire fetch lock
+        id: lock
+        run: |
+          response=$(curl -s -w "\n%{http_code}" \
+            -X POST "https://techisy.vercel.app/api/cron/fetch-feeds/lock" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}")
+
+          http_code=$(echo "$response" | tail -n1)
+          body=$(echo "$response" | sed '$d')
+
+          echo "Lock Response: $body"
+          echo "HTTP Code: $http_code"
+
+          if [[ "$http_code" == "409" ]]; then
+            echo "::warning::Another fetch is already in progress, skipping"
+            echo "acquired=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          if [[ ! "$http_code" =~ ^2 ]]; then
+            echo "::error::Failed to acquire lock with HTTP $http_code"
+            echo "acquired=false" >> $GITHUB_OUTPUT
+            exit 1
+          fi
+
+          echo "acquired=true" >> $GITHUB_OUTPUT
+
   fetch:
     runs-on: ubuntu-latest
+    needs: acquire-lock
+    if: needs.acquire-lock.outputs.lock_acquired == 'true'
     strategy:
       matrix:
         # 15 groups to accommodate up to 45 sources (3 per group)
-        # API returns empty results for out-of-range groups
         group: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
-      max-parallel: 1  # Run sequentially to avoid overwhelming the API
-    outputs:
-      failed_groups: ${{ steps.fetch.outputs.failed }}
+      max-parallel: 1  # Run sequentially
+      fail-fast: false  # Continue even if one group fails
     steps:
       - name: Fetch RSS feeds - Group ${{ matrix.group }}
-        id: fetch
         run: |
           response=$(curl -s -w "\n%{http_code}" \
             -X POST "https://techisy.vercel.app/api/cron/fetch-feeds?group=${{ matrix.group }}" \
@@ -30,19 +61,35 @@ jobs:
           echo "Group ${{ matrix.group }} Response: $body"
           echo "HTTP Code: $http_code"
 
-          # Check for failure (non-2xx response)
           if [[ ! "$http_code" =~ ^2 ]]; then
             echo "::warning::Group ${{ matrix.group }} failed with HTTP $http_code"
-            echo "failed=${{ matrix.group }}" >> $GITHUB_OUTPUT
           fi
 
       - name: Wait before next request
         if: matrix.group != 15
         run: sleep 2
 
+  release-lock:
+    runs-on: ubuntu-latest
+    needs: [acquire-lock, fetch]
+    if: always() && needs.acquire-lock.outputs.lock_acquired == 'true'
+    steps:
+      - name: Release fetch lock
+        run: |
+          response=$(curl -s -w "\n%{http_code}" \
+            -X DELETE "https://techisy.vercel.app/api/cron/fetch-feeds/lock" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}")
+
+          http_code=$(echo "$response" | tail -n1)
+          body=$(echo "$response" | sed '$d')
+
+          echo "Unlock Response: $body"
+          echo "HTTP Code: $http_code"
+
   cleanup:
     runs-on: ubuntu-latest
-    needs: fetch
+    needs: [acquire-lock, release-lock]
+    if: always() && needs.acquire-lock.outputs.lock_acquired == 'true'
     steps:
       - name: Cleanup old articles
         run: |
