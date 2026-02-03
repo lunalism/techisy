@@ -128,6 +128,13 @@ export default function AdminDashboard() {
         const res = await fetch(`/api/cron/fetch-feeds?group=${group}`, { method: 'POST' })
         const data = await res.json()
 
+        // Handle "already fetching" (409 Conflict)
+        if (res.status === 409) {
+          setFetchProgress(null)
+          alert(data.message || '다른 프로세스에서 이미 수집 중입니다.')
+          return
+        }
+
         if (res.ok && data.summary) {
           totalAdded += data.summary.articlesAdded || 0
           totalSources += data.summary.sourcesProcessed || 0

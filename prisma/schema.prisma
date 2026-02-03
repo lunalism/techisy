@@ -35,3 +35,10 @@ model Source {
   @@index([country])
   @@index([active])
 }
+
+model FetchLock {
+  id        String   @id @default("fetch-feeds")
+  lockedAt  DateTime @default(now())
+  lockedBy  String   // "admin" or "cron"
+  expiresAt DateTime // Lock expires after this time (TTL)
+}
