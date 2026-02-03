@@ -63,7 +63,7 @@ export function SettingsDropdown({ auth, onLogout }: SettingsDropdownProps) {
         <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-zinc-800 rounded-lg shadow-lg border border-zinc-200 dark:border-zinc-700 py-2 z-50">
           {/* Layout Section */}
           <div className="px-3 py-2 text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
-            레이아웃 (모바일)
+            레이아웃
           </div>
           {layoutOptions.map((option) => {
             const Icon = option.icon
