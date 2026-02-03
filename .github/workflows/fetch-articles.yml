@@ -21,7 +21,7 @@ jobs:
         id: fetch
         run: |
           response=$(curl -s -w "\n%{http_code}" \
-            -X GET "https://techisy.vercel.app/api/cron/fetch-feeds?group=${{ matrix.group }}" \
+            -X POST "https://techisy.vercel.app/api/cron/fetch-feeds?group=${{ matrix.group }}" \
             -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}")
 
           http_code=$(echo "$response" | tail -n1)

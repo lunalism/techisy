@@ -4,29 +4,38 @@ import { createClient } from '@/lib/supabase/server'
 
 export const SOURCES_PER_GROUP = 3
 
-export async function GET(request: NextRequest) {
-  // Check authentication: CRON_SECRET or Admin session
-  if (process.env.NODE_ENV === 'production') {
-    const authHeader = request.headers.get('authorization')
-    const isValidCron = authHeader === `Bearer ${process.env.CRON_SECRET}`
-
-    // Check admin session if not valid cron
-    let isAdmin = false
-    if (!isValidCron) {
-      try {
-        const supabase = await createClient()
-        const { data: { user } } = await supabase.auth.getUser()
-        isAdmin = user?.email === 'chris@techisy.io'
-      } catch (e) {
-        console.error('Auth check failed:', e)
-      }
-    }
-
-    if (!isValidCron && !isAdmin) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
+// Shared authentication logic
+async function checkAuth(request: NextRequest): Promise<{ authorized: boolean; error?: NextResponse }> {
+  if (process.env.NODE_ENV !== 'production') {
+    return { authorized: true }
   }
 
+  const authHeader = request.headers.get('authorization')
+  const isValidCron = authHeader === `Bearer ${process.env.CRON_SECRET}`
+
+  if (isValidCron) {
+    return { authorized: true }
+  }
+
+  // Check admin session
+  try {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (user?.email === 'chris@techisy.io') {
+      return { authorized: true }
+    }
+  } catch (e) {
+    console.error('Auth check failed:', e)
+  }
+
+  return {
+    authorized: false,
+    error: NextResponse.json({ error: 'Unauthorized' }, { status: 401 }),
+  }
+}
+
+// Shared fetch logic
+async function handleFetchFeeds(request: NextRequest): Promise<NextResponse> {
   try {
     // Get total source count for dynamic group calculation
     const totalSources = await getActiveSourceCount()
@@ -94,4 +103,20 @@ export async function GET(request: NextRequest) {
       { status: 500 }
     )
   }
+}
+
+// POST handler (recommended)
+export async function POST(request: NextRequest) {
+  const auth = await checkAuth(request)
+  if (!auth.authorized) return auth.error!
+
+  return handleFetchFeeds(request)
+}
+
+// GET handler (deprecated, kept for backwards compatibility)
+export async function GET(request: NextRequest) {
+  const auth = await checkAuth(request)
+  if (!auth.authorized) return auth.error!
+
+  return handleFetchFeeds(request)
 }

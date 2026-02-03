@@ -125,7 +125,7 @@ export default function AdminDashboard() {
       try {
         setFetchProgress((prev) => prev && ({ ...prev, currentGroup: group }))
 
-        const res = await fetch(`/api/cron/fetch-feeds?group=${group}`)
+        const res = await fetch(`/api/cron/fetch-feeds?group=${group}`, { method: 'POST' })
         const data = await res.json()
 
         if (res.ok && data.summary) {
