@@ -34,6 +34,11 @@ const sources = [
     rssUrl: 'https://www.zdnet.com/news/rss.xml',
     country: 'US',
   },
+  {
+    name: 'Fast Company',
+    rssUrl: 'https://www.fastcompany.com/technology/rss', // technology 섹션 전용 (not 종합)
+    country: 'US',
+  },
   // KR - Korean Tech Media (verified working, tech-only feeds)
   {
     name: '전자신문',
