@@ -67,22 +67,46 @@ export async function acquireLock(holder: LockHolder): Promise<{ acquired: boole
       },
     }
   } catch (error) {
+    // If FetchLock table doesn't exist or other DB error, allow fetch to proceed
+    // This ensures fetch works even before the table is created
+    const errorMessage = error instanceof Error ? error.message : String(error)
+    const isTableMissing = errorMessage.includes('does not exist') ||
+                           errorMessage.includes('P2021') ||
+                           errorMessage.includes('relation')
+
+    if (isTableMissing) {
+      console.warn('FetchLock table not found, proceeding without lock')
+      return {
+        acquired: true, // Allow fetch to proceed
+        status: { isLocked: false },
+      }
+    }
+
     // Handle race condition where another process created the lock
     console.error('Failed to acquire lock:', error)
-    const currentLock = await prisma.fetchLock.findUnique({
-      where: { id: LOCK_ID },
-    })
+    try {
+      const currentLock = await prisma.fetchLock.findUnique({
+        where: { id: LOCK_ID },
+      })
 
-    return {
-      acquired: false,
-      status: currentLock
-        ? {
-            isLocked: true,
-            lockedBy: currentLock.lockedBy as LockHolder,
-            lockedAt: currentLock.lockedAt,
-            expiresAt: currentLock.expiresAt,
-          }
-        : { isLocked: false },
+      return {
+        acquired: false,
+        status: currentLock
+          ? {
+              isLocked: true,
+              lockedBy: currentLock.lockedBy as LockHolder,
+              lockedAt: currentLock.lockedAt,
+              expiresAt: currentLock.expiresAt,
+            }
+          : { isLocked: false },
+      }
+    } catch {
+      // If even the fallback query fails, allow fetch to proceed
+      console.warn('Lock check failed, proceeding without lock')
+      return {
+        acquired: true,
+        status: { isLocked: false },
+      }
     }
   }
 }
@@ -102,6 +126,13 @@ export async function releaseLock(holder: LockHolder): Promise<boolean> {
     }
     return false
   } catch (error) {
+    // If table doesn't exist, just return true (nothing to release)
+    const errorMessage = error instanceof Error ? error.message : String(error)
+    if (errorMessage.includes('does not exist') ||
+        errorMessage.includes('P2021') ||
+        errorMessage.includes('relation')) {
+      return true
+    }
     console.error('Failed to release lock:', error)
     return false
   }
