@@ -30,8 +30,8 @@ const sources = [
     country: 'US',
   },
   {
-    name: 'Reuters Tech',
-    rssUrl: 'https://www.reuters.com/technology/rss',
+    name: 'ZDNet',
+    rssUrl: 'https://www.zdnet.com/news/rss.xml',
     country: 'US',
   },
   // KR - Korean Tech Media (verified working, tech-only feeds)
@@ -67,6 +67,16 @@ async function main() {
       create: { ...source, active: true },
     })
     console.log(`  + ${result.name} (${result.country})`)
+  }
+
+  // Deactivate sources not in seed list (e.g., removed/replaced sources)
+  const seedUrls = sources.map(s => s.rssUrl)
+  const deactivated = await prisma.source.updateMany({
+    where: { rssUrl: { notIn: seedUrls } },
+    data: { active: false },
+  })
+  if (deactivated.count > 0) {
+    console.log(`\n  - Deactivated ${deactivated.count} sources not in seed list`)
   }
 
   console.log('\nSeeding completed!')
