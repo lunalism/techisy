@@ -37,22 +37,27 @@ const sources = [
   // KR - Korean Tech Media (verified working, tech-only feeds)
   {
     name: '전자신문',
-    rssUrl: 'https://rss.etnews.com/Section901.xml',
+    rssUrl: 'https://rss.etnews.com/03.xml', // IT 섹션 전용 (not Section901 종합)
     country: 'KR',
   },
   {
     name: '플래텀',
-    rssUrl: 'https://platum.kr/feed',
+    rssUrl: 'https://platum.kr/feed', // 스타트업 전문
     country: 'KR',
   },
   {
     name: '뉴스1 IT',
-    rssUrl: 'https://www.news1.kr/rss/it',
+    rssUrl: 'https://www.news1.kr/rss/it', // IT 섹션 전용
     country: 'KR',
   },
   {
     name: 'AI타임스',
-    rssUrl: 'https://cdn.aitimes.com/rss/gn_rss_allArticle.xml',
+    rssUrl: 'https://cdn.aitimes.com/rss/gn_rss_allArticle.xml', // AI 전문
+    country: 'KR',
+  },
+  {
+    name: '테크레시피',
+    rssUrl: 'https://techrecipe.co.kr/feed', // 테크 전문
     country: 'KR',
   },
 ]
