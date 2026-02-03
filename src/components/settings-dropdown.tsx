@@ -1,23 +1,26 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { useTheme } from 'next-themes'
-import { Settings, Sun, Moon, Monitor, Check, LayoutGrid, Layers } from 'lucide-react'
+import Link from 'next/link'
+import { Settings, Check, LayoutGrid, Layers, Shield, LogOut, LogIn } from 'lucide-react'
 import { useLayout } from '@/contexts/layout-context'
 
-const themeOptions = [
-  { value: 'light', label: '라이트', icon: Sun },
-  { value: 'dark', label: '다크', icon: Moon },
-  { value: 'system', label: '시스템', icon: Monitor },
-]
+interface AuthState {
+  user: { id: string; email: string } | null
+  isAdmin: boolean
+}
+
+interface SettingsDropdownProps {
+  auth?: AuthState | null
+  onLogout?: () => void
+}
 
 const layoutOptions = [
   { value: 'card', label: '카드형', icon: LayoutGrid },
   { value: 'overlay', label: '오버레이', icon: Layers },
 ]
 
-export function SettingsDropdown() {
-  const { theme, setTheme } = useTheme()
+export function SettingsDropdown({ auth, onLogout }: SettingsDropdownProps) {
   const { layout, setLayout } = useLayout()
   const [mounted, setMounted] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
@@ -58,36 +61,6 @@ export function SettingsDropdown() {
 
       {isOpen && (
         <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-zinc-800 rounded-lg shadow-lg border border-zinc-200 dark:border-zinc-700 py-2 z-50">
-          {/* Theme Section */}
-          <div className="px-3 py-2 text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
-            테마
-          </div>
-          {themeOptions.map((option) => {
-            const Icon = option.icon
-            const isSelected = theme === option.value
-
-            return (
-              <button
-                key={option.value}
-                onClick={() => {
-                  setTheme(option.value)
-                }}
-                className={`w-full flex items-center gap-3 px-3 py-2 text-sm transition-colors ${
-                  isSelected
-                    ? 'bg-zinc-100 dark:bg-zinc-700 text-zinc-900 dark:text-white'
-                    : 'text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-700/50'
-                }`}
-              >
-                <Icon className="w-4 h-4" />
-                <span className="flex-1 text-left">{option.label}</span>
-                {isSelected && <Check className="w-4 h-4 text-zinc-900 dark:text-white" />}
-              </button>
-            )
-          })}
-
-          {/* Divider */}
-          <div className="my-2 border-t border-zinc-200 dark:border-zinc-700" />
-
           {/* Layout Section */}
           <div className="px-3 py-2 text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
             레이아웃 (모바일)
@@ -114,6 +87,47 @@ export function SettingsDropdown() {
               </button>
             )
           })}
+
+          {/* Divider */}
+          <div className="my-2 border-t border-zinc-200 dark:border-zinc-700" />
+
+          {/* Account Section */}
+          <div className="px-3 py-2 text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
+            계정
+          </div>
+
+          {auth?.isAdmin && (
+            <Link
+              href="/admin"
+              onClick={() => setIsOpen(false)}
+              className="w-full flex items-center gap-3 px-3 py-2 text-sm text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-700/50 transition-colors"
+            >
+              <Shield className="w-4 h-4" />
+              <span className="flex-1 text-left">Admin</span>
+            </Link>
+          )}
+
+          {auth?.user ? (
+            <button
+              onClick={() => {
+                onLogout?.()
+                setIsOpen(false)
+              }}
+              className="w-full flex items-center gap-3 px-3 py-2 text-sm text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-700/50 transition-colors"
+            >
+              <LogOut className="w-4 h-4" />
+              <span className="flex-1 text-left">로그아웃</span>
+            </button>
+          ) : (
+            <Link
+              href="/login"
+              onClick={() => setIsOpen(false)}
+              className="w-full flex items-center gap-3 px-3 py-2 text-sm text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-700/50 transition-colors"
+            >
+              <LogIn className="w-4 h-4" />
+              <span className="flex-1 text-left">로그인</span>
+            </Link>
+          )}
         </div>
       )}
     </div>
