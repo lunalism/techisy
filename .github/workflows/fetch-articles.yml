@@ -10,11 +10,15 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        group: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        # 15 groups to accommodate up to 45 sources (3 per group)
+        # API returns empty results for out-of-range groups
+        group: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
       max-parallel: 1  # Run sequentially to avoid overwhelming the API
+    outputs:
+      failed_groups: ${{ steps.fetch.outputs.failed }}
     steps:
       - name: Fetch RSS feeds - Group ${{ matrix.group }}
-        continue-on-error: true
+        id: fetch
         run: |
           response=$(curl -s -w "\n%{http_code}" \
             -X GET "https://techisy.vercel.app/api/cron/fetch-feeds?group=${{ matrix.group }}" \
@@ -26,8 +30,14 @@ jobs:
           echo "Group ${{ matrix.group }} Response: $body"
           echo "HTTP Code: $http_code"
 
+          # Check for failure (non-2xx response)
+          if [[ ! "$http_code" =~ ^2 ]]; then
+            echo "::warning::Group ${{ matrix.group }} failed with HTTP $http_code"
+            echo "failed=${{ matrix.group }}" >> $GITHUB_OUTPUT
+          fi
+
       - name: Wait before next request
-        if: matrix.group != 10
+        if: matrix.group != 15
         run: sleep 2
 
   cleanup:
@@ -46,6 +56,7 @@ jobs:
           echo "Cleanup Response: $body"
           echo "HTTP Code: $http_code"
 
-          if [ "$http_code" -ne 200 ]; then
-            echo "Cleanup failed with status $http_code"
+          if [[ ! "$http_code" =~ ^2 ]]; then
+            echo "::error::Cleanup failed with status $http_code"
+            exit 1
           fi
