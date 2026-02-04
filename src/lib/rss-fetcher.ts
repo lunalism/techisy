@@ -17,6 +17,31 @@ export async function getActiveSourceCount(): Promise<number> {
   return prisma.source.count({ where: { active: true } })
 }
 
+const MAX_DESCRIPTION_LENGTH = 200
+
+// Extract description from RSS item with fallbacks
+function extractDescription(item: Parser.Item): string | null {
+  const raw = item.contentSnippet || item.summary || item.content
+  if (!raw) return null
+
+  // Strip HTML tags and decode entities
+  const text = raw
+    .replace(/<[^>]*>/g, '')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/\s+/g, ' ')
+    .trim()
+
+  if (!text) return null
+
+  if (text.length <= MAX_DESCRIPTION_LENGTH) return text
+  return text.slice(0, MAX_DESCRIPTION_LENGTH).replace(/\s+\S*$/, '') + '...'
+}
+
 // Parse publish date with fallbacks
 function parsePublishDate(item: Parser.Item): Date {
   // Try isoDate first (already parsed by rss-parser)
@@ -99,12 +124,14 @@ export async function fetchRssFeed(
             }
           }
         } else {
-          // Create new article with image
+          // Create new article with image and description
           const imageUrl = await scrapeOgImage(item.link)
+          const description = extractDescription(item)
           await prisma.article.create({
             data: {
               title: item.title,
               url: item.link,
+              description,
               source: sourceName,
               sourceUrl: rssUrl,
               imageUrl,

@@ -67,6 +67,12 @@ export function ArticleCard({ article }: ArticleCardProps) {
               {article.title}
             </h3>
 
+            {article.description && (
+              <p className="mt-1.5 text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed line-clamp-2">
+                {article.description}
+              </p>
+            )}
+
             {article.publishedAt && (
               <div className="flex items-center gap-1.5 mt-2 text-sm text-zinc-400">
                 <Clock className="w-3.5 h-3.5" />
@@ -117,6 +123,12 @@ export function ArticleCard({ article }: ArticleCardProps) {
           <h3 className="mt-2 text-base font-bold text-white leading-snug line-clamp-2 group-hover:text-white/90 transition-colors">
             {article.title}
           </h3>
+
+          {article.description && (
+            <p className="mt-1.5 text-xs text-white/60 leading-relaxed line-clamp-2">
+              {article.description}
+            </p>
+          )}
 
           {article.publishedAt && (
             <div className="flex items-center gap-1.5 mt-2 text-xs text-white/70">

@@ -65,6 +65,11 @@ function MainArticle({ article, layout }: { article: Article; layout: 'card' | '
             <h2 className="mt-2 text-xl font-bold text-zinc-900 dark:text-white leading-snug line-clamp-3 group-hover:text-zinc-600 dark:group-hover:text-zinc-300 transition-colors">
               {article.title}
             </h2>
+            {article.description && (
+              <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed line-clamp-2">
+                {article.description}
+              </p>
+            )}
             {article.publishedAt && (
               <div className="flex items-center gap-1.5 mt-3 text-sm text-zinc-400">
                 <Clock className="w-3.5 h-3.5" />
@@ -100,6 +105,11 @@ function MainArticle({ article, layout }: { article: Article; layout: 'card' | '
             <h2 className="mt-4 text-3xl lg:text-4xl font-bold text-white leading-tight group-hover:text-white/90 transition-colors">
               {article.title}
             </h2>
+            {article.description && (
+              <p className="mt-3 text-base text-white/60 leading-relaxed line-clamp-2">
+                {article.description}
+              </p>
+            )}
             {article.publishedAt && (
               <div className="flex items-center gap-1.5 mt-4 text-sm text-white/70">
                 <Clock className="w-4 h-4" />
@@ -148,6 +158,12 @@ function MainArticle({ article, layout }: { article: Article; layout: 'card' | '
           <h2 className="mt-3 lg:mt-4 text-xl lg:text-4xl font-bold text-white leading-snug lg:leading-tight line-clamp-3 group-hover:text-white/90 transition-colors">
             {article.title}
           </h2>
+
+          {article.description && (
+            <p className="mt-2 lg:mt-3 text-xs lg:text-base text-white/60 leading-relaxed line-clamp-2">
+              {article.description}
+            </p>
+          )}
 
           {article.publishedAt && (
             <div className="flex items-center gap-1.5 mt-3 lg:mt-4 text-xs lg:text-sm text-white/70">
@@ -199,6 +215,11 @@ function SideArticle({ article, layout }: { article: Article; layout: 'card' | '
             <h3 className="mt-2 text-lg font-bold text-zinc-900 dark:text-white leading-snug line-clamp-2 group-hover:text-zinc-600 dark:group-hover:text-zinc-300 transition-colors">
               {article.title}
             </h3>
+            {article.description && (
+              <p className="mt-1.5 text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed line-clamp-2">
+                {article.description}
+              </p>
+            )}
             {article.publishedAt && (
               <div className="flex items-center gap-1.5 mt-2 text-sm text-zinc-400">
                 <Clock className="w-3.5 h-3.5" />
@@ -233,6 +254,11 @@ function SideArticle({ article, layout }: { article: Article; layout: 'card' | '
             <h3 className="mt-3 text-lg font-bold text-white leading-snug line-clamp-3 group-hover:text-white/90 transition-colors">
               {article.title}
             </h3>
+            {article.description && (
+              <p className="mt-2 text-xs text-white/60 leading-relaxed line-clamp-2">
+                {article.description}
+              </p>
+            )}
             {article.publishedAt && (
               <div className="flex items-center gap-1.5 mt-3 text-xs text-white/70">
                 <Clock className="w-3.5 h-3.5" />
@@ -280,6 +306,12 @@ function SideArticle({ article, layout }: { article: Article; layout: 'card' | '
           <h3 className="mt-2 lg:mt-3 text-base lg:text-lg font-bold text-white leading-snug line-clamp-2 lg:line-clamp-3 group-hover:text-white/90 transition-colors">
             {article.title}
           </h3>
+
+          {article.description && (
+            <p className="mt-1.5 lg:mt-2 text-xs text-white/60 leading-relaxed line-clamp-2">
+              {article.description}
+            </p>
+          )}
 
           {article.publishedAt && (
             <div className="flex items-center gap-1.5 mt-2 lg:mt-3 text-xs text-white/70">

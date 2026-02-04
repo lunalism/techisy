@@ -14,6 +14,7 @@ model Article {
   url         String    @unique
   source      String
   sourceUrl   String?
+  description String?
   imageUrl    String?
   publishedAt DateTime?
   createdAt   DateTime  @default(now())
