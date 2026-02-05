@@ -65,6 +65,21 @@ const sources = [
     rssUrl: 'https://techrecipe.co.kr/feed', // 테크 전문
     country: 'KR',
   },
+  {
+    name: '지디넷코리아',
+    rssUrl: 'https://zdnet.co.kr/feed/', // IT 전문, 기업/산업 뉴스
+    country: 'KR',
+  },
+  {
+    name: '요즘IT',
+    rssUrl: 'https://yozm.wishket.com/magazine/feed/', // 개발자/디자이너 타겟
+    country: 'KR',
+  },
+  {
+    name: 'GeekNews',
+    rssUrl: 'https://news.hada.io/rss/news', // 개발자 커뮤니티, HackerNews 스타일
+    country: 'KR',
+  },
 ]
 
 async function main() {

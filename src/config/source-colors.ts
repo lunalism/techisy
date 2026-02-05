@@ -27,6 +27,9 @@ const SOURCE_COLORS: Record<string, string> = {
   '테크42': '#10B981',
   '비석세스': '#F59E0B',
   'ITWorld': '#DC2626',
+  '지디넷코리아': '#E31937',
+  '요즘IT': '#6366F1',
+  'GeekNews': '#FF6600',
 }
 
 const DEFAULT_COLOR = '#6B7280'

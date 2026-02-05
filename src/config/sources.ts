@@ -41,4 +41,19 @@ export const RSS_SOURCES = [
     rssUrl: 'http://it.chosun.com/data/rss/rss.xml',
     country: 'KR' as const,
   },
+  {
+    name: '지디넷코리아',
+    rssUrl: 'https://zdnet.co.kr/feed/',
+    country: 'KR' as const,
+  },
+  {
+    name: '요즘IT',
+    rssUrl: 'https://yozm.wishket.com/magazine/feed/',
+    country: 'KR' as const,
+  },
+  {
+    name: 'GeekNews',
+    rssUrl: 'https://news.hada.io/rss/news',
+    country: 'KR' as const,
+  },
 ]
