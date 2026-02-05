@@ -35,7 +35,7 @@ export function ArticleCard({ article }: ArticleCardProps) {
         href={article.url}
         target="_blank"
         rel="noopener noreferrer"
-        className="block group"
+        className="block group rounded-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-zinc-950"
       >
         <article className="h-full">
           {/* Image */}
@@ -91,7 +91,7 @@ export function ArticleCard({ article }: ArticleCardProps) {
       href={article.url}
       target="_blank"
       rel="noopener noreferrer"
-      className="block group"
+      className="block group rounded-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-zinc-950"
     >
       <article className="relative aspect-[4/3] overflow-hidden rounded-xl bg-zinc-100 dark:bg-zinc-800">
         {/* Image */}

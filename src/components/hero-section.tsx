@@ -36,7 +36,7 @@ function MainArticle({ article, layout }: { article: Article; layout: 'card' | '
         href={article.url}
         target="_blank"
         rel="noopener noreferrer"
-        className="block group lg:col-span-3"
+        className="block group lg:col-span-3 rounded-xl lg:rounded-2xl transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-zinc-950"
       >
         {/* Mobile: Card style */}
         <article className="lg:hidden">
@@ -128,7 +128,7 @@ function MainArticle({ article, layout }: { article: Article; layout: 'card' | '
       href={article.url}
       target="_blank"
       rel="noopener noreferrer"
-      className="block group lg:col-span-3"
+      className="block group lg:col-span-3 rounded-xl lg:rounded-2xl transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-zinc-950"
     >
       <article className="relative aspect-[4/3] lg:aspect-auto lg:h-full lg:min-h-[480px] rounded-2xl overflow-hidden">
         {article.imageUrl ? (
@@ -187,7 +187,7 @@ function SideArticle({ article, layout }: { article: Article; layout: 'card' | '
         href={article.url}
         target="_blank"
         rel="noopener noreferrer"
-        className="block group lg:col-span-1"
+        className="block group lg:col-span-1 rounded-xl lg:rounded-2xl transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-zinc-950"
       >
         {/* Mobile: Card style */}
         <article className="lg:hidden">
@@ -277,7 +277,7 @@ function SideArticle({ article, layout }: { article: Article; layout: 'card' | '
       href={article.url}
       target="_blank"
       rel="noopener noreferrer"
-      className="block group lg:col-span-1"
+      className="block group lg:col-span-1 rounded-xl lg:rounded-2xl transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-zinc-950"
     >
       <article className="relative aspect-[4/3] lg:aspect-auto lg:h-full lg:min-h-[480px] rounded-2xl overflow-hidden">
         {article.imageUrl ? (
