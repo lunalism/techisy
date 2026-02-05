@@ -59,7 +59,7 @@ function MainArticle({ article, layout }: { article: Article; layout: 'card' | '
               url={article.url}
               title={article.title}
               description={article.description || undefined}
-              className="absolute top-2 right-2 z-10 transition-opacity duration-200"
+              className="absolute top-3 right-3 z-10 transition-opacity duration-200"
             />
           </div>
           <div className="pt-4">
@@ -106,7 +106,7 @@ function MainArticle({ article, layout }: { article: Article; layout: 'card' | '
             url={article.url}
             title={article.title}
             description={article.description || undefined}
-            className="absolute top-3 right-3 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+            className="absolute top-4 right-4 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
           />
           <div className="absolute bottom-0 left-0 right-0 p-10">
             <span
@@ -164,7 +164,7 @@ function MainArticle({ article, layout }: { article: Article; layout: 'card' | '
           url={article.url}
           title={article.title}
           description={article.description || undefined}
-          className="absolute top-2 right-2 lg:top-3 lg:right-3 z-10 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-200"
+          className="absolute top-3 right-3 lg:top-4 lg:right-4 z-10 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-200"
         />
 
         <div className="absolute bottom-0 left-0 right-0 p-5 lg:p-10">
@@ -228,7 +228,7 @@ function SideArticle({ article, layout }: { article: Article; layout: 'card' | '
               url={article.url}
               title={article.title}
               description={article.description || undefined}
-              className="absolute top-2 right-2 z-10 transition-opacity duration-200"
+              className="absolute top-3 right-3 z-10 transition-opacity duration-200"
             />
           </div>
           <div className="pt-4">
@@ -274,7 +274,7 @@ function SideArticle({ article, layout }: { article: Article; layout: 'card' | '
             url={article.url}
             title={article.title}
             description={article.description || undefined}
-            className="absolute top-3 right-3 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+            className="absolute top-4 right-4 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
           />
           <div className="absolute bottom-0 left-0 right-0 p-6">
             <span
@@ -331,7 +331,7 @@ function SideArticle({ article, layout }: { article: Article; layout: 'card' | '
           url={article.url}
           title={article.title}
           description={article.description || undefined}
-          className="absolute top-2 right-2 z-10 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-200"
+          className="absolute top-3 right-3 z-10 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-200"
         />
 
         <div className="absolute bottom-0 left-0 right-0 p-5 lg:p-6">
