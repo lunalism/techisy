@@ -50,7 +50,17 @@ export function ArticleCard({ article }: ArticleCardProps) {
                 unoptimized
               />
             ) : (
-              <div className="w-full h-full bg-gradient-to-br from-zinc-200 to-zinc-300 dark:from-zinc-700 dark:to-zinc-800" />
+              <div
+                className="w-full h-full flex items-center justify-center"
+                style={{ background: `linear-gradient(135deg, ${sourceColor}18, ${sourceColor}40)` }}
+              >
+                <span
+                  className="text-4xl font-bold select-none"
+                  style={{ color: `${sourceColor}70` }}
+                >
+                  {article.source.charAt(0).toUpperCase()}
+                </span>
+              </div>
             )}
           </div>
 
@@ -105,7 +115,17 @@ export function ArticleCard({ article }: ArticleCardProps) {
             unoptimized
           />
         ) : (
-          <div className="absolute inset-0 bg-gradient-to-br from-zinc-200 to-zinc-300 dark:from-zinc-700 dark:to-zinc-800" />
+          <div
+            className="absolute inset-0 flex items-center justify-center"
+            style={{ background: `linear-gradient(135deg, ${sourceColor}18, ${sourceColor}40)` }}
+          >
+            <span
+              className="text-4xl font-bold select-none"
+              style={{ color: `${sourceColor}70` }}
+            >
+              {article.source.charAt(0).toUpperCase()}
+            </span>
+          </div>
         )}
 
         {/* Gradient Overlay */}
