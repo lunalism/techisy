@@ -76,7 +76,7 @@ export function ShareButton({ url, title, description, className = '' }: ShareBu
   }
 
   return (
-    <div ref={ref} className={`relative ${className}`}>
+    <div ref={ref} className={className}>
       <button
         onClick={handleShare}
         className="p-2 rounded-full bg-black/50 hover:bg-black/70 text-white backdrop-blur-sm transition-colors"
