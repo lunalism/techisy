@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { Clock } from 'lucide-react'
 import type { Article } from '@/types'
 import { useLayout } from '@/contexts/layout-context'
+import { ShareButton } from './share-button'
 
 interface HeroSectionProps {
   mainArticle: Article
@@ -54,6 +55,12 @@ function MainArticle({ article, layout }: { article: Article; layout: 'card' | '
             ) : (
               <div className="w-full h-full bg-gradient-to-br from-zinc-300 to-zinc-400 dark:from-zinc-700 dark:to-zinc-800" />
             )}
+            <ShareButton
+              url={article.url}
+              title={article.title}
+              description={article.description || undefined}
+              className="absolute top-2 right-2 z-10 transition-opacity duration-200"
+            />
           </div>
           <div className="pt-4">
             <span
@@ -95,6 +102,12 @@ function MainArticle({ article, layout }: { article: Article; layout: 'card' | '
             <div className="absolute inset-0 bg-gradient-to-br from-zinc-300 to-zinc-400 dark:from-zinc-700 dark:to-zinc-800" />
           )}
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+          <ShareButton
+            url={article.url}
+            title={article.title}
+            description={article.description || undefined}
+            className="absolute top-3 right-3 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+          />
           <div className="absolute bottom-0 left-0 right-0 p-10">
             <span
               className="inline-block px-3 py-1 text-xs font-medium text-white uppercase tracking-wide rounded"
@@ -146,6 +159,13 @@ function MainArticle({ article, layout }: { article: Article; layout: 'card' | '
         )}
 
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+
+        <ShareButton
+          url={article.url}
+          title={article.title}
+          description={article.description || undefined}
+          className="absolute top-2 right-2 lg:top-3 lg:right-3 z-10 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-200"
+        />
 
         <div className="absolute bottom-0 left-0 right-0 p-5 lg:p-10">
           <span
@@ -204,6 +224,12 @@ function SideArticle({ article, layout }: { article: Article; layout: 'card' | '
             ) : (
               <div className="w-full h-full bg-gradient-to-br from-zinc-200 to-zinc-300 dark:from-zinc-700 dark:to-zinc-800" />
             )}
+            <ShareButton
+              url={article.url}
+              title={article.title}
+              description={article.description || undefined}
+              className="absolute top-2 right-2 z-10 transition-opacity duration-200"
+            />
           </div>
           <div className="pt-4">
             <span
@@ -244,6 +270,12 @@ function SideArticle({ article, layout }: { article: Article; layout: 'card' | '
             <div className="absolute inset-0 bg-gradient-to-br from-zinc-200 to-zinc-300 dark:from-zinc-700 dark:to-zinc-800" />
           )}
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+          <ShareButton
+            url={article.url}
+            title={article.title}
+            description={article.description || undefined}
+            className="absolute top-3 right-3 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+          />
           <div className="absolute bottom-0 left-0 right-0 p-6">
             <span
               className="inline-block px-2.5 py-1 text-[11px] font-medium text-white uppercase tracking-wide rounded"
@@ -294,6 +326,13 @@ function SideArticle({ article, layout }: { article: Article; layout: 'card' | '
         )}
 
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+
+        <ShareButton
+          url={article.url}
+          title={article.title}
+          description={article.description || undefined}
+          className="absolute top-2 right-2 z-10 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-200"
+        />
 
         <div className="absolute bottom-0 left-0 right-0 p-5 lg:p-6">
           <span

@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { Clock } from 'lucide-react'
 import type { Article } from '@/types'
 import { useLayout } from '@/contexts/layout-context'
+import { ShareButton } from './share-button'
 
 interface ArticleCardProps {
   article: Article
@@ -62,6 +63,12 @@ export function ArticleCard({ article }: ArticleCardProps) {
                 </span>
               </div>
             )}
+            <ShareButton
+              url={article.url}
+              title={article.title}
+              description={article.description || undefined}
+              className="absolute top-2 right-2 z-10 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-200"
+            />
           </div>
 
           {/* Content */}
@@ -130,6 +137,13 @@ export function ArticleCard({ article }: ArticleCardProps) {
 
         {/* Gradient Overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+
+        <ShareButton
+          url={article.url}
+          title={article.title}
+          description={article.description || undefined}
+          className="absolute top-2 right-2 z-10 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-200"
+        />
 
         {/* Content */}
         <div className="absolute bottom-0 left-0 right-0 p-4">
